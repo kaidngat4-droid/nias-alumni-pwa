@@ -13,11 +13,13 @@
 
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 
-<!-- الخطوط الأصلية للتصميم -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Great+Vibes&display=swap">
+
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Great+Vibes&display=swap"
+>
 
 <link rel="stylesheet" href="styles.css">
 
@@ -27,7 +29,6 @@
 <style>
 /* =========================================================
    LOGIN PAGE
-   يحافظ على هوية التصميم الأصلية
    ========================================================= */
 
 .auth-wrap{
@@ -73,6 +74,11 @@
 .auth-body label{
   display:grid;
   gap:6px;
+}
+
+.auth-body input{
+  box-sizing:border-box;
+  width:100%;
 }
 
 .pass-wrap{
@@ -221,7 +227,10 @@
   display:block;
 }
 
-/* شريط قوة كلمة المرور */
+/* =========================================================
+   قوة كلمة المرور
+   ========================================================= */
+
 .password-strength{
   display:grid;
   gap:6px;
@@ -259,7 +268,10 @@
   line-height:1.6;
 }
 
-/* نتيجة الإعداد والاسترداد */
+/* =========================================================
+   نتيجة الإعداد والاسترداد
+   ========================================================= */
+
 .auth-result{
   display:none;
   padding:15px 18px 18px;
@@ -356,13 +368,15 @@
   width:100%;
 }
 
-/* حالة الانتظار */
 button:disabled{
   cursor:not-allowed;
   opacity:.65;
 }
 
-/* حركة الخطأ */
+/* =========================================================
+   حركة الخطأ
+   ========================================================= */
+
 .shake{
   animation:shake .35s;
 }
@@ -374,7 +388,10 @@ button:disabled{
   80%{transform:translateX(-3px)}
 }
 
-/* تحسينات الهيرو */
+/* =========================================================
+   الهيرو
+   ========================================================= */
+
 .hero--auth{
   padding-bottom:20px;
 }
@@ -389,14 +406,21 @@ button:disabled{
   font-size:1.6rem;
 }
 
-/* زر العودة */
+/* =========================================================
+   زر العودة
+   ========================================================= */
+
 .back-row{
   text-align:center;
   padding:0 18px 14px;
 }
 
-/* الهاتف */
+/* =========================================================
+   الهاتف
+   ========================================================= */
+
 @media(max-width:600px){
+
   .auth-wrap{
     padding-inline:10px;
   }
@@ -412,6 +436,7 @@ button:disabled{
   .hero--auth .branch{
     font-size:.82rem;
   }
+
 }
 </style>
 </head>
@@ -419,7 +444,7 @@ button:disabled{
 <body>
 
 <!-- =========================================================
-     الرأس — الشعار والتوقيع البصري الأصلي
+     الرأس
      ========================================================= -->
 
 <header class="hero hero--auth">
@@ -484,8 +509,12 @@ button:disabled{
 
 <section class="auth-card" aria-labelledby="authTitle">
 
-  <!-- تنبيه دعم المتصفح -->
-  <div id="supportAlert" class="support-alert" role="alert"></div>
+  <div
+    id="supportAlert"
+    class="support-alert"
+    role="alert"
+    aria-live="assertive"
+  ></div>
 
 
   <!-- =====================================================
@@ -507,14 +536,25 @@ button:disabled{
     </div>
 
 
-    <p id="authErr" class="auth-err" role="alert"></p>
+    <p
+      id="authErr"
+      class="auth-err"
+      role="alert"
+      aria-live="assertive"
+    ></p>
 
-    <p id="authOk" class="auth-ok" role="status"></p>
+    <p
+      id="authOk"
+      class="auth-ok"
+      role="status"
+      aria-live="polite"
+    ></p>
 
 
     <form id="authForm" class="auth-body" novalidate>
 
       <label for="authUser">
+
         اسم المستخدم
 
         <input
@@ -524,12 +564,15 @@ button:disabled{
           inputmode="text"
           autocapitalize="none"
           spellcheck="false"
+          maxlength="40"
           required
         >
+
       </label>
 
 
       <label for="authPass">
+
         كلمة المرور
 
         <span class="pass-wrap">
@@ -547,6 +590,8 @@ button:disabled{
             class="pass-eye"
             id="btnEye"
             aria-label="إظهار كلمة المرور"
+            aria-controls="authPass"
+            aria-pressed="false"
           >
 
             <svg
@@ -619,7 +664,7 @@ button:disabled{
 
 
   <!-- =====================================================
-       SETUP — إعداد أول مدير
+       SETUP
        ===================================================== -->
 
   <div id="setupSection" class="auth-section">
@@ -637,12 +682,18 @@ button:disabled{
     </div>
 
 
-    <p id="setupErr" class="auth-err" role="alert"></p>
+    <p
+      id="setupErr"
+      class="auth-err"
+      role="alert"
+      aria-live="assertive"
+    ></p>
 
 
     <form id="setupForm" class="auth-body" novalidate>
 
       <label for="setupName">
+
         الاسم الكامل
 
         <input
@@ -652,10 +703,12 @@ button:disabled{
           maxlength="100"
           required
         >
+
       </label>
 
 
       <label for="setupUser">
+
         اسم المستخدم
 
         <input
@@ -676,6 +729,7 @@ button:disabled{
 
 
       <label for="setupPass">
+
         كلمة المرور
 
         <span class="pass-wrap">
@@ -692,11 +746,14 @@ button:disabled{
             class="pass-eye"
             data-eye-for="setupPass"
             aria-label="إظهار كلمة المرور"
+            aria-pressed="false"
           >
+
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
               <circle cx="12" cy="12" r="3"/>
             </svg>
+
           </button>
 
         </span>
@@ -729,6 +786,7 @@ button:disabled{
 
 
       <label for="setupPass2">
+
         تأكيد كلمة المرور
 
         <span class="pass-wrap">
@@ -745,11 +803,14 @@ button:disabled{
             class="pass-eye"
             data-eye-for="setupPass2"
             aria-label="إظهار كلمة المرور"
+            aria-pressed="false"
           >
+
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
               <circle cx="12" cy="12" r="3"/>
             </svg>
+
           </button>
 
         </span>
@@ -776,8 +837,6 @@ button:disabled{
 
     </div>
 
-
-    <!-- نتيجة الإعداد -->
 
     <div id="setupResult" class="auth-result">
 
@@ -834,7 +893,7 @@ button:disabled{
 
 
   <!-- =====================================================
-       RECOVERY — استرداد الحساب
+       RECOVERY
        ===================================================== -->
 
   <div id="recoverySection" class="auth-section">
@@ -852,12 +911,18 @@ button:disabled{
     </div>
 
 
-    <p id="recoveryErr" class="auth-err" role="alert"></p>
+    <p
+      id="recoveryErr"
+      class="auth-err"
+      role="alert"
+      aria-live="assertive"
+    ></p>
 
 
     <form id="recoveryForm" class="auth-body" novalidate>
 
       <label for="recoveryUser">
+
         اسم المستخدم
 
         <input
@@ -866,12 +931,15 @@ button:disabled{
           autocomplete="username"
           autocapitalize="none"
           spellcheck="false"
+          maxlength="40"
           required
         >
+
       </label>
 
 
       <label for="recoveryCode">
+
         رمز الاسترداد
 
         <input
@@ -888,10 +956,12 @@ button:disabled{
         <span class="field-hint">
           أدخل الرمز كما تم حفظه عند إعداد الحساب.
         </span>
+
       </label>
 
 
       <label for="recoveryPass">
+
         كلمة المرور الجديدة
 
         <span class="pass-wrap">
@@ -908,11 +978,14 @@ button:disabled{
             class="pass-eye"
             data-eye-for="recoveryPass"
             aria-label="إظهار كلمة المرور"
+            aria-pressed="false"
           >
+
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
               <circle cx="12" cy="12" r="3"/>
             </svg>
+
           </button>
 
         </span>
@@ -945,6 +1018,7 @@ button:disabled{
 
 
       <label for="recoveryPass2">
+
         تأكيد كلمة المرور
 
         <span class="pass-wrap">
@@ -961,11 +1035,14 @@ button:disabled{
             class="pass-eye"
             data-eye-for="recoveryPass2"
             aria-label="إظهار كلمة المرور"
+            aria-pressed="false"
           >
+
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
               <circle cx="12" cy="12" r="3"/>
             </svg>
+
           </button>
 
         </span>
@@ -988,8 +1065,6 @@ button:disabled{
 
     </div>
 
-
-    <!-- نتيجة الاسترداد -->
 
     <div id="recoveryResult" class="auth-result">
 
@@ -1062,7 +1137,7 @@ button:disabled{
 
 
 <!-- =========================================================
-     التذييل والتوقيع الإلكتروني — محفوظ كما هو
+     التذييل
      ========================================================= -->
 
 <footer class="foot">
@@ -1106,20 +1181,18 @@ button:disabled{
 ></div>
 
 
-<!-- =========================================================
-     JavaScript
-     ========================================================= -->
-
 <script>
 'use strict';
 
 (() => {
 
-  const $ = selector => document.querySelector(selector);
-
   /* =======================================================
-     التخزين المحلي — نفس تفضيل index.html
+     أدوات أساسية
      ======================================================= */
+
+  const $ = selector =>
+    document.querySelector(selector);
+
 
   const store = {
 
@@ -1139,6 +1212,11 @@ button:disabled{
 
   };
 
+
+  /* =======================================================
+     الثيم
+     ======================================================= */
+
   document.documentElement.dataset.theme =
     store.get('theme') || 'dark';
 
@@ -1147,17 +1225,29 @@ button:disabled{
      العناصر
      ======================================================= */
 
-  const loginSection = $('#loginSection');
-  const setupSection = $('#setupSection');
-  const recoverySection = $('#recoverySection');
+  const loginSection =
+    $('#loginSection');
 
-  const supportAlert = $('#supportAlert');
+  const setupSection =
+    $('#setupSection');
 
-  const authErr = $('#authErr');
-  const authOk = $('#authOk');
+  const recoverySection =
+    $('#recoverySection');
 
-  const setupErr = $('#setupErr');
-  const recoveryErr = $('#recoveryErr');
+  const supportAlert =
+    $('#supportAlert');
+
+  const authErr =
+    $('#authErr');
+
+  const authOk =
+    $('#authOk');
+
+  const setupErr =
+    $('#setupErr');
+
+  const recoveryErr =
+    $('#recoveryErr');
 
 
   /* =======================================================
@@ -1172,30 +1262,44 @@ button:disabled{
 
     if (!element) return;
 
-    element.textContent = message;
+    element.textContent =
+      String(message || '');
+
     element.classList.add('show');
 
     clearTimeout(toastTimer);
 
-    toastTimer = setTimeout(() => {
-      element.classList.remove('show');
-    }, 3500);
+    toastTimer =
+      setTimeout(() => {
+
+        element.classList.remove('show');
+
+      }, 3500);
 
   }
 
 
   /* =======================================================
-     رسائل الخطأ
+     الرسائل
      ======================================================= */
 
-  function showError(element, message, shake = true) {
+  function showError(
+    element,
+    message,
+    shake = true
+  ) {
 
-    element.textContent = message;
+    if (!element) return;
+
+    element.textContent =
+      String(message || 'تعذر تنفيذ العملية.');
+
     element.classList.add('show');
 
     if (shake) {
 
-      const card = $('.auth-card');
+      const card =
+        $('.auth-card');
 
       if (card) {
 
@@ -1214,7 +1318,10 @@ button:disabled{
 
   function hideMessage(element) {
 
+    if (!element) return;
+
     element.textContent = '';
+
     element.classList.remove('show');
 
   }
@@ -1231,7 +1338,7 @@ button:disabled{
 
 
   /* =======================================================
-     تحويل الخطأ القادم من auth.js إلى رسالة مفهومة
+     رسالة أخطاء auth.js
      ======================================================= */
 
   function errorMessage(error) {
@@ -1242,25 +1349,32 @@ button:disabled{
       error.until
     ) {
 
-      const minutes = Math.max(
-        1,
-        Math.ceil((error.until - Date.now()) / 60000)
-      );
+      const minutes =
+        Math.max(
+          1,
+          Math.ceil(
+            (error.until - Date.now()) / 60000
+          )
+        );
 
       return `الحساب مقفل مؤقتاً. حاول بعد ${minutes} دقيقة.`;
 
     }
 
 
-    let message = 'تعذر تنفيذ العملية.';
+    let message =
+      'تعذر تنفيذ العملية.';
 
     try {
 
       if (
         window.NIASAuth &&
-        typeof NIASAuth.errorText === 'function'
+        typeof window.NIASAuth.errorText === 'function'
       ) {
-        message = NIASAuth.errorText(error);
+
+        message =
+          window.NIASAuth.errorText(error);
+
       }
 
     } catch {}
@@ -1284,7 +1398,7 @@ button:disabled{
 
 
   /* =======================================================
-     إظهار القسم المطلوب
+     التنقل بين الأقسام
      ======================================================= */
 
   function showSection(name) {
@@ -1303,7 +1417,10 @@ button:disabled{
         $('#authUser')?.focus();
       }, 50);
 
+      return;
+
     }
+
 
     if (name === 'setup') {
 
@@ -1313,7 +1430,10 @@ button:disabled{
         $('#setupName')?.focus();
       }, 50);
 
+      return;
+
     }
+
 
     if (name === 'recovery') {
 
@@ -1329,35 +1449,50 @@ button:disabled{
 
 
   /* =======================================================
-     رابط العودة — منع open redirect
+     رابط العودة
+     منع Open Redirect
      ======================================================= */
 
   function getReturnUrl() {
 
     const raw =
-      new URLSearchParams(location.search).get('back');
+      new URLSearchParams(
+        location.search
+      ).get('back');
+
 
     if (!raw) {
       return 'index.html';
     }
 
+
     try {
 
       const url =
-        new URL(raw, location.href);
+        new URL(
+          raw,
+          location.href
+        );
 
-      if (url.origin !== location.origin) {
-        return 'index.html';
-      }
-
-      const path = url.pathname || '';
 
       if (
-        !path ||
-        path.toLowerCase().includes('login.html')
+        url.origin !== location.origin
       ) {
         return 'index.html';
       }
+
+
+      const path =
+        url.pathname || '';
+
+
+      if (
+        !path ||
+        path.toLowerCase().endsWith('login.html')
+      ) {
+        return 'index.html';
+      }
+
 
       return (
         path +
@@ -1375,8 +1510,64 @@ button:disabled{
 
 
   /* =======================================================
-     إظهار/إخفاء كلمة المرور
+     إظهار / إخفاء كلمة المرور
      ======================================================= */
+
+  function togglePassword(
+    input,
+    button
+  ) {
+
+    if (!input || !button) {
+      return;
+    }
+
+
+    const show =
+      input.type === 'password';
+
+
+    input.type =
+      show ? 'text' : 'password';
+
+
+    button.setAttribute(
+      'aria-label',
+      show
+        ? 'إخفاء كلمة المرور'
+        : 'إظهار كلمة المرور'
+    );
+
+
+    button.setAttribute(
+      'aria-pressed',
+      String(show)
+    );
+
+
+    const svg =
+      button.querySelector('svg');
+
+
+    if (!svg) {
+      return;
+    }
+
+
+    svg.innerHTML = show
+
+      ? `
+        <path d="M17.9 17.9A10.4 10.4 0 0 1 12 19c-6.5 0-10-7-10-7a17.6 17.6 0 0 1 4.1-4.9M9.9 4.9A9.5 9.5 0 0 1 12 4.5c6.5 0 10 7 10 7a17.7 17.7 0 0 1-2.2 3.2"/>
+        <path d="M3 3l18 18"/>
+      `
+
+      : `
+        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
+        <circle cx="12" cy="12" r="3"/>
+      `;
+
+  }
+
 
   function setupPasswordEyes() {
 
@@ -1384,74 +1575,75 @@ button:disabled{
       .querySelectorAll('[data-eye-for]')
       .forEach(button => {
 
-        button.addEventListener('click', () => {
+        const input =
+          document.getElementById(
+            button.dataset.eyeFor
+          );
 
-          const input =
-            document.getElementById(
-              button.dataset.eyeFor
+
+        button.addEventListener(
+          'click',
+          () => {
+
+            togglePassword(
+              input,
+              button
             );
 
-          if (!input) return;
+          }
+        );
+
+      });
+
+
+    const loginEye =
+      $('#btnEye');
+
+    const loginPassword =
+      $('#authPass');
+
+
+    if (
+      loginEye &&
+      loginPassword
+    ) {
+
+      loginEye.addEventListener(
+        'click',
+        () => {
 
           const show =
-            input.type === 'password';
+            loginPassword.type === 'password';
 
-          input.type =
+
+          loginPassword.type =
             show ? 'text' : 'password';
 
-          button.setAttribute(
+
+          $('#eyeOpen').hidden =
+            show;
+
+          $('#eyeClosed').hidden =
+            !show;
+
+
+          loginEye.setAttribute(
             'aria-label',
             show
               ? 'إخفاء كلمة المرور'
               : 'إظهار كلمة المرور'
           );
 
-          const svg =
-            button.querySelector('svg');
 
-          if (svg) {
+          loginEye.setAttribute(
+            'aria-pressed',
+            String(show)
+          );
 
-            svg.innerHTML = show
-
-              ? `
-                <path d="M17.9 17.9A10.4 10.4 0 0 1 12 19c-6.5 0-10-7-10-7a17.6 17.6 0 0 1 4.1-4.9M9.9 4.9A9.5 9.5 0 0 1 12 4.5c6.5 0 10 7 10 7a17.7 17.7 0 0 1-2.2 3.2"/>
-                <path d="M3 3l18 18"/>
-              `
-
-              : `
-                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
-                <circle cx="12" cy="12" r="3"/>
-              `;
-
-          }
-
-        });
-
-      });
-
-
-    /* زر الدخول له SVG مختلف */
-    $('#btnEye')?.addEventListener('click', () => {
-
-      const input = $('#authPass');
-
-      const show =
-        input.type === 'password';
-
-      input.type =
-        show ? 'text' : 'password';
-
-      $('#eyeOpen').hidden = show;
-      $('#eyeClosed').hidden = !show;
-
-      $('#btnEye').setAttribute(
-        'aria-label',
-        show
-          ? 'إخفاء كلمة المرور'
-          : 'إظهار كلمة المرور'
+        }
       );
 
-    });
+    }
 
   }
 
@@ -1460,18 +1652,59 @@ button:disabled{
      قوة كلمة المرور
      ======================================================= */
 
+  function getPasswordStrength(value) {
+
+    try {
+
+      if (
+        window.NIASAuth &&
+        typeof window.NIASAuth.strength === 'function'
+      ) {
+
+        return Number(
+          window.NIASAuth.strength(value)
+        ) || 0;
+
+      }
+
+    } catch {}
+
+
+    return 0;
+
+  }
+
+
   function updateStrength(
     input,
     bars,
     text
   ) {
 
-    const level =
-      typeof NIASAuth?.strength === 'function'
-        ? NIASAuth.strength(input.value)
-        : 0;
+    if (
+      !input ||
+      !bars ||
+      !text
+    ) {
+      return;
+    }
 
-    bars.dataset.level = String(level);
+
+    const level =
+      Math.max(
+        0,
+        Math.min(
+          4,
+          getPasswordStrength(
+            input.value
+          )
+        )
+      );
+
+
+    bars.dataset.level =
+      String(level);
+
 
     const labels = [
       'أدخل كلمة مرور قوية',
@@ -1481,45 +1714,33 @@ button:disabled{
       'قوية'
     ];
 
+
     text.textContent =
       labels[level] || labels[0];
 
   }
 
 
-  $('#setupPass').addEventListener(
-    'input',
-    () => {
-
-      updateStrength(
-        $('#setupPass'),
-        $('#setupStrengthBars'),
-        $('#setupStrengthText')
-      );
-
-    }
-  );
-
-
-  $('#recoveryPass').addEventListener(
-    'input',
-    () => {
-
-      updateStrength(
-        $('#recoveryPass'),
-        $('#recoveryStrengthBars'),
-        $('#recoveryStrengthText')
-      );
-
-    }
-  );
-
-
   /* =======================================================
-     نسخ رمز الاسترداد
+     نسخ النص
      ======================================================= */
 
   async function copyText(text) {
+
+    const value =
+      String(text || '').trim();
+
+
+    if (!value) {
+
+      toast(
+        'لا يوجد رمز لنسخه.'
+      );
+
+      return false;
+
+    }
+
 
     try {
 
@@ -1528,9 +1749,13 @@ button:disabled{
         window.isSecureContext
       ) {
 
-        await navigator.clipboard.writeText(text);
+        await navigator.clipboard.writeText(
+          value
+        );
 
-        toast('تم نسخ رمز الاسترداد.');
+        toast(
+          'تم نسخ رمز الاسترداد.'
+        );
 
         return true;
 
@@ -1539,37 +1764,69 @@ button:disabled{
     } catch {}
 
 
-    /* بديل للمتصفحات التي لا توفر Clipboard API */
-
     try {
 
       const area =
-        document.createElement('textarea');
+        document.createElement(
+          'textarea'
+        );
 
-      area.value = text;
 
-      area.style.position = 'fixed';
-      area.style.opacity = '0';
+      area.value = value;
 
-      document.body.appendChild(area);
+      area.style.position =
+        'fixed';
+
+      area.style.left =
+        '-9999px';
+
+      area.style.top =
+        '0';
+
+      area.style.opacity =
+        '0';
+
+
+      document.body.appendChild(
+        area
+      );
+
 
       area.focus();
       area.select();
 
+
       const copied =
-        document.execCommand('copy');
+        document.execCommand(
+          'copy'
+        );
+
 
       area.remove();
 
+
       if (copied) {
-        toast('تم نسخ رمز الاسترداد.');
+
+        toast(
+          'تم نسخ رمز الاسترداد.'
+        );
+
+      } else {
+
+        toast(
+          'تعذر النسخ تلقائياً، حدّد الرمز وانسخه يدوياً.'
+        );
+
       }
+
 
       return copied;
 
     } catch {
 
-      toast('تعذر النسخ تلقائياً، حدّد الرمز وانسخه يدوياً.');
+      toast(
+        'تعذر النسخ تلقائياً، حدّد الرمز وانسخه يدوياً.'
+      );
 
       return false;
 
@@ -1579,16 +1836,77 @@ button:disabled{
 
 
   /* =======================================================
+     حالة الزر
+     ======================================================= */
+
+  function setBusy(
+    button,
+    busyText
+  ) {
+
+    if (!button) {
+      return () => {};
+    }
+
+
+    const oldText =
+      button.textContent;
+
+
+    button.disabled = true;
+
+    button.setAttribute(
+      'aria-busy',
+      'true'
+    );
+
+    button.textContent =
+      busyText;
+
+
+    return () => {
+
+      button.disabled = false;
+
+      button.removeAttribute(
+        'aria-busy'
+      );
+
+      button.textContent =
+        oldText;
+
+    };
+
+  }
+
+
+  /* =======================================================
      إعداد أول مدير
      ======================================================= */
 
-  $('#setupForm').addEventListener(
+  $('#setupForm')?.addEventListener(
     'submit',
     async event => {
 
       event.preventDefault();
 
       hideMessage(setupErr);
+
+
+      if (
+        !window.NIASAuth ||
+        typeof NIASAuth.setupAdmin !== 'function'
+      ) {
+
+        showError(
+          setupErr,
+          'نظام المصادقة غير متاح.'
+        );
+
+        return;
+
+      }
+
 
       const name =
         $('#setupName').value.trim();
@@ -1645,11 +1963,27 @@ button:disabled{
       }
 
 
-      const passwordError =
-        NIASAuth.checkPassword(
-          password,
-          username
+      let passwordError = null;
+
+      try {
+
+        passwordError =
+          NIASAuth.checkPassword(
+            password,
+            username
+          );
+
+      } catch (error) {
+
+        showError(
+          setupErr,
+          errorMessage(error)
         );
+
+        return;
+
+      }
+
 
       if (passwordError) {
 
@@ -1665,10 +1999,14 @@ button:disabled{
       }
 
 
-      const button = $('#btnSetup');
+      const button =
+        $('#btnSetup');
 
-      button.disabled = true;
-      button.textContent = 'جارٍ إنشاء الحساب…';
+      const restore =
+        setBusy(
+          button,
+          'جارٍ إنشاء الحساب…'
+        );
 
 
       try {
@@ -1685,34 +2023,49 @@ button:disabled{
           result.code;
 
 
-        $('#setupForm').style.display = 'none';
+        /*
+         * حفظ اسم المستخدم مؤقتاً حتى
+         * يتم تعبئته في شاشة الدخول.
+         */
+        $('#authUser').value =
+          username;
 
-        $('.auth-foot', setupSection)?.remove?.();
+
+        $('#setupForm').style.display =
+          'none';
 
 
         const setupFoot =
-          setupSection.querySelector('.auth-foot');
+          setupSection.querySelector(
+            '.auth-foot'
+          );
+
 
         if (setupFoot) {
-          setupFoot.style.display = 'none';
+
+          setupFoot.style.display =
+            'none';
+
         }
 
 
-        $('#setupResult').classList.add('show');
+        $('#setupResult')
+          .classList
+          .add('show');
 
 
-        toast('تم إنشاء حساب المدير بنجاح.');
+        toast(
+          'تم إنشاء حساب المدير بنجاح.'
+        );
 
       } catch (error) {
+
+        restore();
 
         showError(
           setupErr,
           errorMessage(error)
         );
-
-        button.disabled = false;
-        button.textContent =
-          'إنشاء حساب المدير';
 
       }
 
@@ -1724,7 +2077,7 @@ button:disabled{
      تسجيل الدخول
      ======================================================= */
 
-  $('#authForm').addEventListener(
+  $('#authForm')?.addEventListener(
     'submit',
     async event => {
 
@@ -1732,6 +2085,22 @@ button:disabled{
 
       hideMessage(authErr);
       hideMessage(authOk);
+
+
+      if (
+        !window.NIASAuth ||
+        typeof NIASAuth.verify !== 'function'
+      ) {
+
+        showError(
+          authErr,
+          'نظام المصادقة غير متاح.'
+        );
+
+        return;
+
+      }
+
 
       const username =
         $('#authUser').value.trim();
@@ -1771,9 +2140,11 @@ button:disabled{
       const button =
         $('#btnLogin');
 
-      button.disabled = true;
-      button.textContent =
-        'جارٍ التحقق…';
+      const restore =
+        setBusy(
+          button,
+          'جارٍ التحقق…'
+        );
 
 
       try {
@@ -1788,20 +2159,32 @@ button:disabled{
         authOk.textContent =
           'تم تسجيل الدخول بنجاح، جارٍ التحويل…';
 
-        authOk.classList.add('show');
+        authOk.classList.add(
+          'show'
+        );
 
 
-        /* تشغيل مراقبة الخمول بعد إنشاء الجلسة */
+        /*
+         * تشغيل مراقبة الخمول.
+         */
         try {
 
           if (
             typeof NIASAuth.watchIdle ===
             'function'
           ) {
+
             NIASAuth.watchIdle(30);
+
           }
 
         } catch {}
+
+
+        /*
+         * منع النقر المكرر أثناء التحويل.
+         */
+        button.disabled = true;
 
 
         setTimeout(() => {
@@ -1815,17 +2198,17 @@ button:disabled{
 
       } catch (error) {
 
+        restore();
+
         showError(
           authErr,
           errorMessage(error)
         );
 
+
         $('#authPass').value = '';
 
         $('#authPass').focus();
-
-        button.disabled = false;
-        button.textContent = 'دخول';
 
       }
 
@@ -1837,13 +2220,29 @@ button:disabled{
      استرداد كلمة المرور
      ======================================================= */
 
-  $('#recoveryForm').addEventListener(
+  $('#recoveryForm')?.addEventListener(
     'submit',
     async event => {
 
       event.preventDefault();
 
       hideMessage(recoveryErr);
+
+
+      if (
+        !window.NIASAuth ||
+        typeof NIASAuth.recover !== 'function'
+      ) {
+
+        showError(
+          recoveryErr,
+          'نظام المصادقة غير متاح.'
+        );
+
+        return;
+
+      }
+
 
       const username =
         $('#recoveryUser').value.trim();
@@ -1900,11 +2299,27 @@ button:disabled{
       }
 
 
-      const passwordError =
-        NIASAuth.checkPassword(
-          password,
-          username
+      let passwordError = null;
+
+      try {
+
+        passwordError =
+          NIASAuth.checkPassword(
+            password,
+            username
+          );
+
+      } catch (error) {
+
+        showError(
+          recoveryErr,
+          errorMessage(error)
         );
+
+        return;
+
+      }
+
 
       if (passwordError) {
 
@@ -1923,9 +2338,12 @@ button:disabled{
       const button =
         $('#btnRecoverySubmit');
 
-      button.disabled = true;
-      button.textContent =
-        'جارٍ استرداد الحساب…';
+
+      const restore =
+        setBusy(
+          button,
+          'جارٍ استرداد الحساب…'
+        );
 
 
       try {
@@ -1945,13 +2363,18 @@ button:disabled{
         $('#recoveryForm').style.display =
           'none';
 
+
         const recoveryFoot =
           recoverySection.querySelector(
             '.auth-foot'
           );
 
+
         if (recoveryFoot) {
-          recoveryFoot.style.display = 'none';
+
+          recoveryFoot.style.display =
+            'none';
+
         }
 
 
@@ -1960,19 +2383,19 @@ button:disabled{
           .add('show');
 
 
-        toast('تم تغيير كلمة المرور بنجاح.');
+        toast(
+          'تم تغيير كلمة المرور بنجاح.'
+        );
 
       } catch (error) {
+
+        restore();
 
         showError(
           recoveryErr,
           errorMessage(error)
         );
 
-        button.disabled = false;
-        button.textContent =
-          'تغيير كلمة المرور';
-
       }
 
     }
@@ -1980,106 +2403,189 @@ button:disabled{
 
 
   /* =======================================================
-     أزرار التنقل
+     التنقل
      ======================================================= */
 
-  $('#btnRecovery').addEventListener(
+  $('#btnRecovery')?.addEventListener(
     'click',
     () => {
 
-      showSection('recovery');
+      showSection(
+        'recovery'
+      );
 
     }
   );
 
 
-  $('#backToLogin').addEventListener(
+  $('#backToLogin')?.addEventListener(
     'click',
     () => {
 
-      showSection('login');
+      showSection(
+        'login'
+      );
 
     }
   );
 
 
-  $('#goLoginAfterSetup').addEventListener(
+  /* =======================================================
+     بعد إعداد المدير
+     ======================================================= */
+
+  $('#goLoginAfterSetup')?.addEventListener(
     'click',
     () => {
 
-      $('#setupResult').classList.remove('show');
-
-      $('#setupForm').reset();
-      $('#setupForm').style.display = '';
-
-      const foot =
-        setupSection.querySelector('.auth-foot');
-
-      if (foot) {
-        foot.style.display = '';
-      }
-
-      $('#setupStrengthBars').dataset.level = '0';
-
-      $('#setupStrengthText').textContent =
-        'أدخل كلمة مرور قوية';
-
-      showSection('login');
-
-      $('#authUser').value =
+      const username =
         $('#setupUser').value.trim();
 
+
+      $('#setupResult')
+        .classList
+        .remove('show');
+
+
+      $('#setupForm').reset();
+
+      $('#setupForm').style.display =
+        '';
+
+
+      const foot =
+        setupSection.querySelector(
+          '.auth-foot'
+        );
+
+
+      if (foot) {
+
+        foot.style.display =
+          '';
+
+      }
+
+
+      $('#setupStrengthBars')
+        .dataset
+        .level = '0';
+
+
+      $('#setupStrengthText')
+        .textContent =
+        'أدخل كلمة مرور قوية';
+
+
+      showSection(
+        'login'
+      );
+
+
+      $('#authUser').value =
+        username;
+
+
+      setTimeout(() => {
+
+        $('#authPass')?.focus();
+
+      }, 50);
+
     }
   );
 
 
-  $('#goLoginAfterRecovery').addEventListener(
+  /* =======================================================
+     بعد استرداد كلمة المرور
+     ======================================================= */
+
+  $('#goLoginAfterRecovery')?.addEventListener(
     'click',
     () => {
+
+      const username =
+        $('#recoveryUser').value.trim();
+
 
       $('#recoveryResult')
         .classList
         .remove('show');
 
+
       $('#recoveryForm').reset();
-      $('#recoveryForm').style.display = '';
+
+      $('#recoveryForm').style.display =
+        '';
+
 
       const foot =
-        recoverySection.querySelector('.auth-foot');
+        recoverySection.querySelector(
+          '.auth-foot'
+        );
+
 
       if (foot) {
-        foot.style.display = '';
+
+        foot.style.display =
+          '';
+
       }
 
-      $('#recoveryStrengthBars').dataset.level = '0';
 
-      $('#recoveryStrengthText').textContent =
+      $('#recoveryStrengthBars')
+        .dataset
+        .level = '0';
+
+
+      $('#recoveryStrengthText')
+        .textContent =
         'أدخل كلمة مرور قوية';
 
-      showSection('login');
+
+      showSection(
+        'login'
+      );
+
+
+      $('#authUser').value =
+        username;
+
+
+      setTimeout(() => {
+
+        $('#authPass')?.focus();
+
+      }, 50);
 
     }
   );
 
 
-  $('#copySetupCode').addEventListener(
+  /* =======================================================
+     النسخ
+     ======================================================= */
+
+  $('#copySetupCode')?.addEventListener(
     'click',
     () => {
 
       copyText(
-        $('#setupRecoveryCode').textContent
+        $('#setupRecoveryCode')
+          ?.textContent
       );
 
     }
   );
 
 
-  $('#copyRecoveryCode').addEventListener(
+  $('#copyRecoveryCode')?.addEventListener(
     'click',
     () => {
 
       copyText(
-        $('#recoveryNewCode').textContent
+        $('#recoveryNewCode')
+          ?.textContent
       );
 
     }
@@ -2087,50 +2593,193 @@ button:disabled{
 
 
   /* =======================================================
-     فحص دعم النظام + الجلسة + وجود المستخدمين
+     مراقبة قوة كلمات المرور
+     ======================================================= */
+
+  $('#setupPass')?.addEventListener(
+    'input',
+    () => {
+
+      updateStrength(
+        $('#setupPass'),
+        $('#setupStrengthBars'),
+        $('#setupStrengthText')
+      );
+
+    }
+  );
+
+
+  $('#recoveryPass')?.addEventListener(
+    'input',
+    () => {
+
+      updateStrength(
+        $('#recoveryPass'),
+        $('#recoveryStrengthBars'),
+        $('#recoveryStrengthText')
+      );
+
+    }
+  );
+
+
+  /* =======================================================
+     دعم لوحة المفاتيح
+     ======================================================= */
+
+  document.addEventListener(
+    'keydown',
+    event => {
+
+      if (
+        event.key === 'Escape' &&
+        recoverySection.classList.contains('active')
+      ) {
+
+        showSection('login');
+
+      }
+
+    }
+  );
+
+
+  /* =======================================================
+     فحص النظام
+     ======================================================= */
+
+  function showSupportError(message) {
+
+    supportAlert.textContent =
+      message;
+
+    supportAlert.classList.add(
+      'show'
+    );
+
+
+    $('#btnLogin').disabled =
+      true;
+
+    $('#btnRecovery').disabled =
+      true;
+
+  }
+
+
+  function isSupported() {
+
+    if (
+      !('indexedDB' in window)
+    ) {
+
+      return false;
+
+    }
+
+
+    if (
+      !window.crypto ||
+      !window.crypto.subtle
+    ) {
+
+      return false;
+
+    }
+
+
+    return true;
+
+  }
+
+
+  /* =======================================================
+     فحص auth.js
+     ======================================================= */
+
+  function authAvailable() {
+
+    return !!(
+      window.NIASAuth &&
+      typeof NIASAuth.supported === 'function' &&
+      typeof NIASAuth.requireSession === 'function' &&
+      typeof NIASAuth.hasUsers === 'function' &&
+      typeof NIASAuth.verify === 'function'
+    );
+
+  }
+
+
+  /* =======================================================
+     التشغيل
      ======================================================= */
 
   async function boot() {
 
-    /* التحقق من auth.js */
+    /*
+     * أولاً: auth.js
+     */
+    if (!authAvailable()) {
 
-    if (
-      !window.NIASAuth
-    ) {
-
-      supportAlert.textContent =
-        'تعذر تحميل نظام المصادقة auth.js. تأكد من وجود الملف بجانب login.html.';
-
-      supportAlert.classList.add('show');
-
-      $('#btnLogin').disabled = true;
+      showSupportError(
+        'تعذر تحميل نظام المصادقة auth.js. تأكد من وجود الملف بجانب login.html ثم أعد تحميل الصفحة.'
+      );
 
       return;
 
     }
 
 
-    /* التحقق من دعم IndexedDB و Web Crypto */
+    /*
+     * ثانياً: دعم المتصفح
+     */
+    if (!isSupported()) {
 
-    if (
-      !NIASAuth.supported()
-    ) {
-
-      supportAlert.textContent =
-        'هذا المتصفح لا يدعم التشفير المطلوب. افتح التطبيق عبر HTTPS أو localhost.';
-
-      supportAlert.classList.add('show');
-
-      $('#btnLogin').disabled = true;
+      showSupportError(
+        'هذا المتصفح لا يدعم IndexedDB أو Web Crypto المطلوبين. استخدم متصفحاً حديثاً وافتح التطبيق عبر HTTPS أو localhost عند الحاجة.'
+      );
 
       return;
 
     }
 
+
+    /*
+     * ثالثاً: فحص دعم auth.js نفسه
+     */
+    let supported = false;
 
     try {
 
-      /* جلسة قائمة؟ */
+      supported =
+        !!NIASAuth.supported();
+
+    } catch {
+
+      supported = false;
+
+    }
+
+
+    if (!supported) {
+
+      showSupportError(
+        'بيئة التشغيل الحالية لا تدعم متطلبات نظام المصادقة. جرّب متصفحاً حديثاً أو افتح التطبيق عبر HTTPS أو localhost.'
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * رابعاً: فحص الجلسة الحالية.
+     *
+     * redirect:false مهم جداً في login.html
+     * حتى لا يعيد auth.js الصفحة إلى نفسها.
+     */
+    try {
 
       const session =
         await NIASAuth.requireSession({
@@ -2148,8 +2797,22 @@ button:disabled{
 
       }
 
+    } catch (error) {
 
-      /* هل تم إنشاء حسابات من قبل؟ */
+      showError(
+        authErr,
+        errorMessage(error)
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * خامساً: معرفة هل النظام جديد.
+     */
+    try {
 
       const hasUsers =
         await NIASAuth.hasUsers();
@@ -2157,11 +2820,15 @@ button:disabled{
 
       if (!hasUsers) {
 
-        showSection('setup');
+        showSection(
+          'setup'
+        );
 
       } else {
 
-        showSection('login');
+        showSection(
+          'login'
+        );
 
       }
 
@@ -2178,16 +2845,15 @@ button:disabled{
 
 
   /* =======================================================
-     تشغيل الصفحة
+     بدء الصفحة
      ======================================================= */
 
   setupPasswordEyes();
 
   boot();
 
-
 })();
 </script>
 
 </body>
-</html>
+      </html>
