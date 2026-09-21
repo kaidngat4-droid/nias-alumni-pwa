@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>سجل الخريجين | المعهد الوطني للعلوم الإدارية – فرع إب</title>
+<meta name="description" content="سجل خريجي الدبلوم المتوسط في المعهد الوطني للعلوم الإدارية فرع إب: بحث وتصفية وإحصاءات وتدقيق للبيانات، ويعمل دون اتصال.">
+<meta name="theme-color" content="#07111f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="سجل الخريجين">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="img/seal.png">
+<link rel="preload" as="image" href="img/emblem.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Great+Vibes&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script src="auth.js"></script>
+<script>
+  // حماية الجلسة: تعمل مع auth.js الحقيقي أو تجاوز تجريبي محلي
+  (async () => {
+    try {
+      if (window.NIASAuth && typeof NIASAuth.requireSession === 'function') {
+        const session = await NIASAuth.requireSession();
+        if (session) document.documentElement.dataset.userRole = session.role || '';
+      } else {
+        // لا يوجد auth.js: تحقق من الجلسة التجريبية (من login.html)
+        let s = null;
+        try { s = JSON.parse(localStorage.getItem('nias_session') || 'null'); } catch { s = null; }
+        if (!s) { location.replace('login.html?back=' + encodeURIComponent(location.pathname.split('/').pop() || 'index.html')); return; }
+        document.documentElement.dataset.userRole = s.role || 'admin';
+      }
+    } catch {
+      // إن تعذر التحقق نكمل بعرض الصفحة بدل تعليق التحميل
+    }
+  })();
+</script>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-row">
+    <span class="pill pill-gold" id="verPill">NIAS · v1.1.0 · 2026</span>
+    <img class="emblem" src="img/emblem.png" alt="شعار الجمهورية اليمنية" width="200" height="123" fetchpriority="high">
+    <span class="pill pill-green">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>
+      بيانات محلية <span class="dot"></span>
+    </span>
+  </div>
+  <p class="republic">الجمهورية اليمنية</p>
+  <div class="goldline"></div>
+  <div class="seal"><img src="img/seal.png" alt="شعار المعهد الوطني للعلوم الإدارية" width="198" height="198"></div>
+  <h1 class="inst">المعهد الوطني للعلوم الإدارية</h1>
+  <p class="branch">فرع إب — مركز التخطيط والتطوير وضمان الجودة</p>
+
+  <div class="portal">
+    <div class="portal-main">
+      <span class="portal-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 4 2 9l10 5 8-4v6h2V9z"/><path d="M6 12.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-3.5l-6 3z"/></svg>
+      </span>
+      <div class="portal-text">
+        <b>NIAS Alumni Registry</b>
+        <span>سجل الخريجين</span>
+        <small>Graduates Registry System</small>
+      </div>
+    </div>
+    <div class="portal-actions">
+      <span id="net" class="net" hidden>بدون اتصال</span>
+      <button id="btnInstall" class="ghost" hidden>تثبيت التطبيق</button>
+      <button id="btnUser" class="ghost" hidden title="حساب المستخدم"></button>
+      <button id="btnLogout" class="ghost" hidden>خروج</button>
+      <button id="btnTheme" class="ghost icon" aria-label="تبديل المظهر الفاتح والداكن">◐</button>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="أقسام التطبيق">
+  <button data-tab="records" aria-current="page">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>السجل</span>
+  </button>
+  <button data-tab="stats">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg><span>الإحصاءات</span>
+  </button>
+  <button data-tab="quality">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span>تدقيق البيانات</span>
+  </button>
+  <button data-tab="data">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg><span>البيانات</span>
+  </button>
+</nav>
+
+<main>
+  <!-- السجل -->
+  <section id="tab-records" class="tab">
+    <div class="search">
+      <input id="q" type="search" inputmode="search" autocomplete="off" placeholder="ابحث بالاسم أو الرقم الأكاديمي أو رقم الشهادة" aria-label="بحث في السجل">
+      <button id="btnFilters" class="ghost" aria-expanded="false" aria-controls="filters">تصفية</button>
+    </div>
+    <div id="filters" class="filters" hidden>
+      <label>التخصص<select id="fSpec"></select></label>
+      <label>الدفعة<select id="fBatch"></select></label>
+      <label>عام التخرج<select id="fYear"></select></label>
+      <label>التقدير<select id="fGrade"></select></label>
+      <label>الجنس
+        <select id="fGender"><option value="">الكل</option><option>ذكر</option><option>أنثى</option></select>
+      </label>
+      <label>جهة العمل
+        <select id="fWork"><option value="">الكل</option><option value="yes">لديه جهة عمل مسجلة</option><option value="no">بدون جهة عمل</option></select>
+      </label>
+      <label>الترتيب
+        <select id="fSort">
+          <option value="serial">حسب م</option>
+          <option value="name">الاسم (أ – ي)</option>
+          <option value="yearDesc">الأحدث تخرجاً</option>
+          <option value="yearAsc">الأقدم تخرجاً</option>
+          <option value="gpaDesc">الأعلى معدلاً</option>
+          <option value="batch">الدفعة</option>
+        </select>
+      </label>
+      <label>&nbsp;<button id="btnReset" class="ghost" type="button">مسح التصفية</button></label>
+    </div>
+    <div id="chips" class="chips"></div>
+    <p id="count" class="count" aria-live="polite"></p>
+    <div id="list" class="list"></div>
+    <div id="pager" class="pager"></div>
+  </section>
+
+  <!-- الإحصاءات -->
+  <section id="tab-stats" class="tab" hidden>
+    <label class="check"><input type="checkbox" id="statsFiltered"> احتساب النتائج المصفّاة فقط</label>
+    <div id="statsBody"></div>
+  </section>
+
+  <!-- تدقيق البيانات -->
+  <section id="tab-quality" class="tab" hidden>
+    <p class="lead">اضغط على أي بند لعرض السجلات المعنيّة في السجل وتصحيحها.</p>
+    <div id="qualityBody"></div>
+  </section>
+
+  <!-- البيانات -->
+  <section id="tab-data" class="tab" hidden>
+    <div class="card">
+      <h3>استيراد</h3>
+      <p>ملفات CSV أو JSON أو Excel. يجب أن يحتوي الصف الأول على أسماء الأعمدة مثل: الاسم، الرقم الأكاديمي، التخصص، الدفعة، المعدل، التقدير، عام التخرج، رقم الشهادة، جهة العمل، الوظيفة، ملاحظات.</p>
+      <input type="file" id="file" accept=".csv,.tsv,.txt,.json,.xlsx,.xls" aria-label="اختيار ملف">
+      <div class="radios">
+        <label class="check"><input type="radio" name="imode" value="append" checked> إضافة إلى السجلات الحالية</label>
+        <label class="check"><input type="radio" name="imode" value="replace"> استبدال كل السجلات</label>
+      </div>
+      <label class="check"><input type="checkbox" id="skipDup" checked> تخطي المكرر (نفس الرقم الأكاديمي)</label>
+      <div class="btns">
+        <button id="btnImport" class="primary">استيراد الملف</button>
+        <button id="btnTemplate" class="ghost">تنزيل قالب فارغ</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>تصدير ونسخ احتياطي</h3>
+      <p>التصدير يشمل السجلات المعروضة حالياً بعد التصفية. النسخة الاحتياطية تشمل كل السجلات.</p>
+      <div class="btns">
+        <button id="btnCsv" class="ghost">CSV</button>
+        <button id="btnXlsx" class="ghost">Excel</button>
+        <button id="btnPrint" class="ghost">طباعة</button>
+        <button id="btnJson" class="primary">نسخة احتياطية JSON</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>إدارة البيانات</h3>
+      <p>البيانات محفوظة على هذا الجهاز فقط ولا تُرسل إلى أي خادم.</p>
+      <div class="btns">
+        <button id="btnSample" class="ghost">تحميل بيانات تجريبية</button>
+        <button id="btnClearDemo" class="ghost">حذف التجريبية</button>
+        <button id="btnClearAll" class="danger">حذف كل السجلات</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>حول التطبيق</h3>
+      <p id="about"></p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <p class="foot-a"><b>سجل الخريجين</b> — المعهد الوطني للعلوم الإدارية · فرع إب</p>
+  <p class="foot-b">البيانات محفوظة محلياً عبر IndexedDB · تعمل دون اتصال</p>
+  <div class="sign">
+    <span class="sign-l1">هندسة وتطوير</span>
+    <span class="sign-name" dir="ltr">Dr.Salah Al-Ahdal</span>
+    <span class="sign-l2" dir="ltr">Design &amp; Development</span>
+    <i class="goldline"></i>
+  </div>
+</footer>
+
+<button id="fab" class="fab" aria-label="إضافة خريج">+</button>
+
+<dialog id="editor" aria-labelledby="edTitle">
+  <form id="form" novalidate>
+    <header>
+      <h2 id="edTitle">بيانات الخريج</h2>
+      <button type="button" id="edClose" class="ghost icon" aria-label="إغلاق">✕</button>
+    </header>
+    <div class="grid">
+      <label class="full">الاسم الكامل<input name="name" required autocomplete="off"></label>
+      <label>الرقم الأكاديمي<input name="acadNo" inputmode="text" autocomplete="off" placeholder="مثال: 2023-115"></label>
+      <label>رقم الشهادة<input name="certNo" inputmode="text" autocomplete="off"></label>
+      <label>الجنس
+        <select name="gender"><option value="">—</option><option>ذكر</option><option>أنثى</option></select>
+      </label>
+      <label>التخصص<input name="spec" list="dlSpec" autocomplete="off"></label>
+      <label>الدفعة<input name="batch" list="dlBatch" autocomplete="off"></label>
+      <label>عام التخرج<input name="year" type="number" min="1990" max="2100" inputmode="numeric"></label>
+      <label>المعدل<input name="gpa" type="number" min="0" max="100" step="0.01" inputmode="decimal"></label>
+      <label>التقدير
+        <select name="grade">
+          <option value="">—</option><option>ممتاز</option><option>جيد جداً</option><option>جيد</option><option>مقبول</option><option>راسب</option>
+        </select>
+      </label>
+      <label>البرنامج<input name="program"></label>
+      <label>م (التسلسل)<input name="serial" type="number" inputmode="numeric"></label>
+      <label>جهة العمل<input name="workplace"></label>
+      <label>الوظيفة<input name="job"></label>
+      <label>رقم الهاتف<input name="phone" type="tel" inputmode="tel" autocomplete="off"></label>
+      <label class="full">ملاحظات<textarea name="notes" rows="2"></textarea></label>
+    </div>
+    <p id="edFlags" class="flags-note"></p>
+    <footer>
+      <button type="submit" class="primary">حفظ</button>
+      <button type="button" id="edDelete" class="danger">حذف</button>
+    </footer>
+  </form>
+  <datalist id="dlSpec"></datalist>
+  <datalist id="dlBatch"></datalist>
+</dialog>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="print" aria-hidden="true"></div>
+
+<script src="app.js"></script>
+<script>
+  // إظهار المستخدم وزر الخروج + منطق تسجيل الخروج
+  (() => {
+    const btnUser = document.getElementById('btnUser');
+    const btnLogout = document.getElementById('btnLogout');
+    let s = null;
+    try { s = JSON.parse(localStorage.getItem('nias_session') || 'null'); } catch { s = null; }
+    const name = (document.documentElement.dataset.userRole || (s && s.user) || '').toString();
+    if (name) { btnUser.textContent = '👤 ' + name; btnUser.hidden = false; btnLogout.hidden = false; }
+    btnLogout.addEventListener('click', () => {
+      if (!confirm('تسجيل الخروج من سجل الخريجين؟')) return;
+      if (window.NIASAuth && typeof NIASAuth.logout === 'function') {
+        NIASAuth.logout();
+      } else {
+        try { localStorage.removeItem('nias_session'); } catch {}
+      }
+      location.replace('login.html');
+    });
+  })();
+</script>
+</body>
+</html>

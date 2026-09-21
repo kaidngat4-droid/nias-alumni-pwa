@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>تسجيل الدخول | سجل الخريجين — المعهد الوطني للعلوم الإدارية</title>
+<meta name="description" content="تسجيل الدخول إلى سجل خريجي المعهد الوطني للعلوم الإدارية فرع إب.">
+<meta name="theme-color" content="#07111f">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Great+Vibes&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script src="auth.js"></script>
+<style>
+  /* أنماط خاصة بصفحة الدخول — تكمّل styles.css دون تعديلها */
+  .auth-wrap{max-width:980px;margin:0 auto;padding:18px 14px 40px}
+  .auth-card{max-width:430px;margin:18px auto 0;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+  .auth-head{padding:16px 18px 10px;text-align:center;border-bottom:1px solid var(--line)}
+  .auth-head h2{margin:0;font:700 1.3rem var(--serif)}
+  .auth-head p{margin:4px 0 0;color:var(--muted);font-size:.85rem}
+  .auth-body{padding:16px 18px;display:grid;gap:14px}
+  .pass-wrap{position:relative}
+  .pass-wrap input{padding-inline-end:3rem}
+  .pass-eye{position:absolute;inset-inline-end:6px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--muted);padding:.3rem .5rem;min-height:36px}
+  .pass-eye svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .auth-err{margin:0 18px;display:none;background:var(--bad-bg);color:var(--bad);border-radius:8px;padding:.5rem .8rem;font-size:.88rem}
+  .auth-err.show{display:block}
+  .auth-ok{margin:0 18px;display:none;background:color-mix(in srgb,var(--green) 12%,transparent);color:var(--green);border-radius:8px;padding:.5rem .8rem;font-size:.88rem}
+  .auth-ok.show{display:block}
+  .auth-foot{padding:0 18px 16px;display:grid;gap:8px}
+  .auth-foot .primary{width:100%}
+  .auth-meta{text-align:center;color:var(--muted);font-size:.8rem;margin-top:10px}
+  .shake{animation:shake .35s}
+  @keyframes shake{20%{transform:translateX(5px)}40%{transform:translateX(-5px)}60%{transform:translateX(3px)}80%{transform:translateX(-3px)}}
+  .hero--auth{padding-bottom:20px}
+  .hero--auth .seal{margin-top:12px;width:84px;height:84px}
+  .hero--auth .inst{font-size:1.6rem}
+</style>
+</head>
+<body>
+
+<header class="hero hero--auth">
+  <div class="hero-row">
+    <span class="pill pill-gold">NIAS · 2026</span>
+    <img class="emblem" src="img/emblem.png" alt="شعار الجمهورية اليمنية" width="200" height="123">
+    <span class="pill pill-green">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>
+      بيانات محلية <i class="dot"></i>
+    </span>
+  </div>
+  <p class="republic">الجمهورية اليمنية</p>
+  <div class="goldline"></div>
+  <div class="seal"><img src="img/seal.png" alt="شعار المعهد الوطني للعلوم الإدارية" width="198" height="198"></div>
+  <h1 class="inst">المعهد الوطني للعلوم الإدارية</h1>
+  <p class="branch">فرع إب — مركز التخطيط والتطوير وضمان الجودة</p>
+</header>
+
+<main class="auth-wrap">
+  <section class="auth-card" aria-labelledby="authTitle">
+    <div class="auth-head">
+      <h2 id="authTitle">تسجيل الدخول إلى سجل الخريجين</h2>
+      <p>Graduates Registry — Secure Access</p>
+    </div>
+
+    <p id="authErr" class="auth-err" role="alert"></p>
+    <p id="authOk" class="auth-ok"></p>
+
+    <form id="authForm" class="auth-body" novalidate>
+      <label>اسم المستخدم
+        <input name="user" id="authUser" autocomplete="username" inputmode="text" required>
+      </label>
+      <label>كلمة المرور
+        <span class="pass-wrap">
+          <input name="pass" id="authPass" type="password" autocomplete="current-password" required>
+          <button type="button" class="pass-eye" id="btnEye" aria-label="إظهار كلمة المرور">
+            <svg viewBox="0 0 24 24" id="eyeOpen"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg viewBox="0 0 24 24" id="eyeClosed" hidden><path d="M17.9 17.9A10.4 10.4 0 0 1 12 19c-6.5 0-10-7-10-7a17.6 17.6 0 0 1 4.1-4.9M9.9 4.9A9.5 9.5 0 0 1 12 4.5c6.5 0 10 7 10 7a17.7 17.7 0 0 1-2.2 3.2"/><path d="M3 3l18 18"/></svg>
+          </button>
+        </span>
+      </label>
+      <label class="check"><input type="checkbox" id="authRemember" checked> تذكرني على هذا الجهاز</label>
+    </form>
+
+    <div class="auth-foot">
+      <button form="authForm" id="btnLogin" class="primary" type="submit">دخول</button>
+      <p class="auth-meta" id="authMeta">البيانات محفوظة على هذا الجهاز ولا تُرسل إلى أي خادم.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <p class="foot-a"><b>سجل الخريجين</b> — المعهد الوطني للعلوم الإدارية · فرع إب</p>
+  <p class="foot-b">البيانات محفوظة محلياً عبر IndexedDB · تعمل دون اتصال</p>
+  <div class="sign">
+    <span class="sign-l1">هندسة وتطوير</span>
+    <span class="sign-name" dir="ltr">Dr.Salah Al-Ahdal</span>
+    <span class="sign-l2" dir="ltr">Design &amp; Development</span>
+    <i class="goldline"></i>
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<>
+'use strict';
+(() => {
+  const $ = s => document.querySelector(s);
+
+  /* المظهر: نفس تفضيل index.html */
+  const store = {
+    get: k => { try { return localStorage.getItem(k); } catch { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch {} }
+  };
+  document.documentElement.dataset.theme = store.get('theme') || 'dark';
+
+  /* تنبيه */
+  let toastT;
+  function toast(msg) {
+    const t = $('#toast');
+    t.innerHTML = '';
+    const s = document.createElement('span'); s.textContent = msg; t.append(s);
+    t.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(() => t.classList.remove('show'), 4000);
+  }
+
+  function err(msg) {
+    const e = $('#authErr');
+    e.textContent = msg;
+    e.classList.add('show');
+    const card = $('.auth-card');
+    card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+  }
+  function ok(msg) {
+    const o = $('#authOk');
+    o.textContent = msg;
+    o.classList.add('show');
+  }
+
+  /* إن كان هناك جلسة قائمة فانتقل مباشرة إلى السجل */
+  (async () => {
+    try {
+      if (window.NIASAuth && NIASAuth.hasSession && await NIASAuth.hasSession()) {
+        location.replace('index.html');
+      }
+    } catch { /* نكمل لصفحة الدخول */ }
+  })();
+
+  /* عرض/إخفاء كلمة المرور */
+  $('#btnEye').addEventListener('click', () => {
+    const p = $('#authPass');
+    const show = p.type === 'password';
+    p.type = show ? 'text' : 'password';
+    $('#eyeOpen').hidden = show;
+    $('#eyeClosed').hidden = !show;
+    $('#btnEye').setAttribute('aria-label', show ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور');
+  });
+
+  /* الدخول: يستخدم NIASAuth.login إن وُجد، وإلا يعمل بدخول تجريبي محلي */
+  const DEMO = { user: 'admin', pass: 'nias2026', role: 'admin' };
+
+  $('#authForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $('#authErr').classList.remove('show');
+    $('#authOk').classList.remove('show');
+
+    const u = $('#authUser').value.trim();
+    const p = $('#authPass').value;
+    if (!u) { err('أدخل اسم المستخدم.'); $('#authUser').focus(); return; }
+    if (!p) { err('أدخل كلمة المرور.'); $('#authPass').focus(); return; }
+
+    const btn = $('#btnLogin');
+    btn.disabled = true; btn.textContent = 'جارٍ التحقق…';
+<script>
+'use strict';
+(() => {
+  const $ = s => document.querySelector(s);
+
+  /* المظهر: نفس تفضيل index.html */
+  const store = {
+    get: k => { try { return localStorage.getItem(k); } catch { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch {} }
+  };
+  document.documentElement.dataset.theme = store.get('theme') || 'dark';
+
+  /* تنبيه */
+  let toastT;
+  function toast(msg) {
+    const t = $('#toast');
+    t.innerHTML = '';
+    const s = document.createElement('span'); s.textContent = msg; t.append(s);
+    t.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(() => t.classList.remove('show'), 4000);
+  }
+
+  function err(msg) {
+    const e = $('#authErr');
+    e.textContent = msg;
+    e.classList.add('show');
+    const card = $('.auth-card');
+    card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+  }
+  function ok(msg) {
+    const o = $('#authOk');
+    o.textContent = msg;
+    o.classList.add('show');
+  }
+
+  /* ───────── عرض/إخفاء كلمة المرور ───────── */
+  $('#btnEye').addEventListener('click', () => {
+    const p = $('#authPass');
+    const show = p.type === 'password';
+    p.type = show ? 'text' : 'password';
+    $('#eyeOpen').hidden = show;
+    $('#eyeClosed').hidden = !show;
+    $('#btnEye').setAttribute('aria-label', show ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور');
+  });
+
+  /* ───────── التحقق من الدعم والجلسة والإعداد الأول ───────── */
+  (async () => {
+    if (!window.NIASAuth || !NIASAuth.supported()) {
+      err('هذا المتصفح لا يدعم التشفير المطلوب. افتح التطبيق عبر HTTPS أو localhost.');
+      $('#btnLogin').disabled = true;
+      return;
+    }
+    // جلسة قائمة؟ → انتقل مباشرة
+    try {
+      const s = await NIASAuth.requireSession({ redirect: false });
+      if (s) { location.replace('index.html'); return; }
+    } catch { /* تجاهل */ }
+
+    // لا يوجد أي حساب؟ → اعرض إعداد أول مدير
+    if (!(await NIASAuth.hasUsers())) {
+      showSetupDialog();
+    }
+  })();
+
+  /* ───────── إعداد أول مدير ───────── */
+  function showSetupDialog() {
+    const name = prompt('إعداد النظام لأول مرة\n\nالاسم الكامل لمدير النظام:');
+    if (!name || name.trim().length < 3) { err('أُلغي الإعداد أو الاسم قصير.'); return; }
+    const username = prompt('اسم المستخدم (3–40 حرفاً بالإنجليزية، مثال: admin):');
+    if (!username) { err('أُلغي الإعداد.'); return; }
+    const password = prompt('كلمة المرور (8 أحرف على الأقل، حروف وأرقام):');
+    if (!password) { err('أُلغي الإعداد.'); return; }
+    const password2 = prompt('تأكيد كلمة المرور:');
+    if (password !== password2) { err('كلمتا المرور غير متطابقتين.'); return; }
+
+    NIASAuth.setupAdmin({ name, username, password })
+      .then(({ code }) => {
+        ok('تم إنشاء حساب المدير بنجاح.');
+        alert(
+          '✅ تم إعداد النظام.\n\n' +
+          'اسم المستخدم: ' + username + '\n\n' +
+          '🔑 رمز الاسترداد (احفظه في مكان آمن، لن يظهر مجدداً):\n\n' + code
+        );
+        $('#authUser').value = username;
+        $('#authPass').focus();
+      })
+      .catch(ex => {
+        err('تعذر الإعداد: ' + (NIASAuth.errorText ? NIASAuth.errorText(ex) : ex.message));
+      });
+  }
+
+  /* ───────── تسجيل الدخول ───────── */
+  $('#authForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $('#authErr').classList.remove('show');
+    $('#authOk').classList.remove('show');
+
+    const u = $('#authUser').value.trim();
+    const p = $('#authPass').value;
+    if (!u) { err('أدخل اسم المستخدم.'); $('#authUser').focus(); return; }
+    if (!p) { err('أدخل كلمة المرور.'); $('#authPass').focus(); return; }
+
+    const btn = $('#btnLogin');
+    btn.disabled = true; btn.textContent = 'جارٍ التحقق…';
+
+    try {
+      // الدالة الصحيحة: verify (تُنشئ الجلسة بنفسها وتحفظها)
+      await NIASAuth.verify(u, p, $('#authRemember').checked);
+      ok('تم تسجيل الدخول بنجاح، جارٍ التحويل…');
+      const back = new URLSearchParams(location.search).get('back');
+      setTimeout(() => location.replace(
+        back && !back.includes('://') ? back : 'index.html'
+      ), 400);
+    } catch (ex) {
+      const code = ex && ex.code;
+      let msg = NIASAuth.errorText ? NIASAuth.errorText(ex) : 'تعذر الدخول.';
+      if (code === 'bad' && ex.left) msg += ` (محاولات متبقية: ${ex.left})`;
+      if (code === 'locked' && ex.until) {
+        const mins = Math.max(1, Math.round((ex.until - Date.now()) / 60000));
+        msg = `الحساب مقفل مؤقتاً. حاول بعد ${mins} دقيقة.`;
+      }
+      err(msg);
+      $('#authPass').value = '';
+      $('#authPass').focus();
+      btn.disabled = false; btn.textContent = 'دخول';
+    }
+  });
+})();
+</script>
+</body>
+</html>
