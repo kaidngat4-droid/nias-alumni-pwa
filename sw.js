@@ -1,60 +1,136 @@
-/* عامل الخدمة: تخزين مؤقت للعمل دون اتصال. غيّر رقم VERSION عند كل تحديث للملفات. */
-const VERSION = 'v1.1.0';
+/* عامل الخدمة: تخزين مؤقت للعمل دون اتصال.
+   غيّر رقم VERSION عند كل تحديث للملفات. */
+
+const VERSION = 'v1.1.1';
 const CACHE = 'nias-' + VERSION;
 const RUNTIME = 'runtime-nias';
+
 const CORE = [
-  './', './index.html', './styles.css', './app.js', './manifest.webmanifest',
-  './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png',
-  './img/emblem.png', './img/seal.png'
+  './',
+  './index.html',
+  './login.html',
+  './styles.css',
+  './app.js',
+  './auth.js',
+  './manifest.webmanifest',
+
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/icon-maskable-512.png',
+
+  './img/emblem.png',
+  './img/seal.png'
 ];
 
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)));
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE)
+      .then(cache => cache.addAll(CORE))
+      .then(() => self.skipWaiting())
+  );
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
+self.addEventListener('activate', event => {
+  event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k.startsWith('nias-') && k !== CACHE).map(k => caches.delete(k))))
+      .then(keys =>
+        Promise.all(
+          keys
+            .filter(
+              key =>
+                key.startsWith('nias-') &&
+                key !== CACHE
+            )
+            .map(key => caches.delete(key))
+        )
+      )
       .then(() => self.clients.claim())
   );
 });
 
-self.addEventListener('message', e => { if (e.data === 'skipWaiting') self.skipWaiting(); });
+self.addEventListener('message', event => {
+  if (event.data === 'skipWaiting') {
+    self.skipWaiting();
+  }
+});
 
-self.addEventListener('fetch', e => {
-  const req = e.request;
-  if (req.method !== 'GET') return;
-  const url = new URL(req.url);
+self.addEventListener('fetch', event => {
+  const request = event.request;
 
-  // صفحات التطبيق: من الذاكرة أولاً
-  if (req.mode === 'navigate') {
-    e.respondWith(
-      caches.match(req, { ignoreSearch: true })
-        .then(hit => hit || caches.match('./index.html'))
-        .then(hit => hit || fetch(req))
+  // نتعامل فقط مع طلبات GET
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+
+  /*
+   * صفحات التطبيق:
+   * نحاول من التخزين المؤقت أولاً،
+   * ثم index.html كحل احتياطي.
+   */
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      caches.match(request, { ignoreSearch: true })
+        .then(cached => cached || caches.match('./index.html'))
+        .then(cached => cached || fetch(request))
     );
     return;
   }
 
-  // ملفات التطبيق نفسه
+  /*
+   * ملفات التطبيق المحلية
+   */
   if (url.origin === self.location.origin) {
-    e.respondWith(
-      caches.match(req, { ignoreSearch: true }).then(hit => hit || fetch(req).then(res => {
-        if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
-        return res;
-      }))
+    event.respondWith(
+      caches.match(request, { ignoreSearch: true })
+        .then(cached => {
+          if (cached) return cached;
+
+          return fetch(request).then(response => {
+            if (response.ok) {
+              const copy = response.clone();
+
+              caches.open(CACHE).then(cache => {
+                cache.put(request, copy);
+              });
+            }
+
+            return response;
+          });
+        })
     );
+
     return;
   }
 
-  // مكتبة Excel والخطوط (Amiri وGreat Vibes): تُخزَّن عند أول استخدام ثم تعمل دون اتصال
-  if (['cdnjs.cloudflare.com', 'fonts.googleapis.com', 'fonts.gstatic.com'].includes(url.hostname)) {
-    e.respondWith(
-      caches.open(RUNTIME).then(async c => {
-        const hit = await c.match(req);
-        const net = fetch(req).then(res => { c.put(req, res.clone()); return res; }).catch(() => hit);
-        return hit || net;
+  /*
+   * مكتبات خارجية:
+   * Excel + الخطوط
+   *
+   * يتم حفظها عند أول استخدام،
+   * وبعد ذلك يمكن استخدامها دون اتصال.
+   */
+  if (
+    [
+      'cdnjs.cloudflare.com',
+      'fonts.googleapis.com',
+      'fonts.gstatic.com'
+    ].includes(url.hostname)
+  ) {
+    event.respondWith(
+      caches.open(RUNTIME).then(async cache => {
+        const cached = await cache.match(request);
+
+        try {
+          const response = await fetch(request);
+
+          if (response.ok) {
+            cache.put(request, response.clone());
+          }
+
+          return response;
+        } catch (error) {
+          return cached;
+        }
       })
     );
   }
