@@ -1,7 +1,7 @@
 /* عامل الخدمة: تخزين مؤقت للعمل دون اتصال.
    غيّر رقم VERSION عند كل تحديث للملفات. */
 
-const VERSION = 'v1.1.1';
+const VERSION = 'v1.1.2';
 const CACHE = 'nias-' + VERSION;
 const RUNTIME = 'runtime-nias';
 
