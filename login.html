@@ -1,306 +1,1438 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>تسجيل الدخول | سجل الخريجين — المعهد الوطني للعلوم الإدارية</title>
-<meta name="description" content="تسجيل الدخول إلى سجل خريجي المعهد الوطني للعلوم الإدارية فرع إب.">
-<meta name="theme-color" content="#07111f">
-<link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Great+Vibes&display=swap">
-<link rel="stylesheet" href="styles.css">
-<script src="auth.js"></script>
-<style>
-  /* أنماط خاصة بصفحة الدخول — تكمّل styles.css دون تعديلها */
-  .auth-wrap{max-width:980px;margin:0 auto;padding:18px 14px 40px}
-  .auth-card{max-width:430px;margin:18px auto 0;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.12)}
-  .auth-head{padding:16px 18px 10px;text-align:center;border-bottom:1px solid var(--line)}
-  .auth-head h2{margin:0;font:700 1.3rem var(--serif)}
-  .auth-head p{margin:4px 0 0;color:var(--muted);font-size:.85rem}
-  .auth-body{padding:16px 18px;display:grid;gap:14px}
-  .pass-wrap{position:relative}
-  .pass-wrap input{padding-inline-end:3rem}
-  .pass-eye{position:absolute;inset-inline-end:6px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--muted);padding:.3rem .5rem;min-height:36px}
-  .pass-eye svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .auth-err{margin:0 18px;display:none;background:var(--bad-bg);color:var(--bad);border-radius:8px;padding:.5rem .8rem;font-size:.88rem}
-  .auth-err.show{display:block}
-  .auth-ok{margin:0 18px;display:none;background:color-mix(in srgb,var(--green) 12%,transparent);color:var(--green);border-radius:8px;padding:.5rem .8rem;font-size:.88rem}
-  .auth-ok.show{display:block}
-  .auth-foot{padding:0 18px 16px;display:grid;gap:8px}
-  .auth-foot .primary{width:100%}
-  .auth-meta{text-align:center;color:var(--muted);font-size:.8rem;margin-top:10px}
-  .shake{animation:shake .35s}
-  @keyframes shake{20%{transform:translateX(5px)}40%{transform:translateX(-5px)}60%{transform:translateX(3px)}80%{transform:translateX(-3px)}}
-  .hero--auth{padding-bottom:20px}
-  .hero--auth .seal{margin-top:12px;width:84px;height:84px}
-  .hero--auth .inst{font-size:1.6rem}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="description" content="نظام سجل الخريجين - المعهد الوطني للعلوم الإدارية - فرع إب">
+
+  <title>تسجيل الدخول | سجل الخريجين</title>
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="img/seal.png" type="image/png">
+
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --primary-light: #ccfbf1;
+      --gold: #c59b3a;
+      --bg: #f4f7f9;
+      --card: #ffffff;
+      --text: #17212b;
+      --muted: #6b7280;
+      --border: #dbe2e8;
+      --danger: #b42318;
+      --success: #087443;
+      --shadow: 0 20px 55px rgba(15, 23, 42, .12);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family:
+        "Tahoma",
+        "Arial",
+        "Segoe UI",
+        sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(15,118,110,.09), transparent 30%),
+        radial-gradient(circle at 90% 90%, rgba(197,155,58,.08), transparent 30%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 16px;
+    }
+
+    .login-shell {
+      width: min(100%, 980px);
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(15, 118, 110, .08);
+    }
+
+    /* الجانب التعريفي */
+    .brand-panel {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 45px 32px;
+      color: white;
+      background:
+        linear-gradient(
+          145deg,
+          #115e59 0%,
+          #0f766e 52%,
+          #0d9488 100%
+        );
+      overflow: hidden;
+    }
+
+    .brand-panel::before,
+    .brand-panel::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .brand-panel::before {
+      width: 360px;
+      height: 360px;
+      top: -180px;
+      right: -170px;
+    }
+
+    .brand-panel::after {
+      width: 300px;
+      height: 300px;
+      bottom: -160px;
+      left: -150px;
+    }
+
+    .emblem {
+      position: relative;
+      z-index: 1;
+      width: 105px;
+      height: 105px;
+      object-fit: contain;
+      margin-bottom: 18px;
+      filter: drop-shadow(0 8px 14px rgba(0,0,0,.18));
+    }
+
+    .brand-seal {
+      position: relative;
+      z-index: 1;
+      width: 74px;
+      height: 74px;
+      object-fit: contain;
+      margin-bottom: 18px;
+      background: rgba(255,255,255,.95);
+      border-radius: 50%;
+      padding: 5px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.15);
+    }
+
+    .brand-panel h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 10px;
+      font-size: 27px;
+      line-height: 1.5;
+      font-weight: 800;
+    }
+
+    .brand-panel .subtitle {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      color: rgba(255,255,255,.88);
+      font-size: 15px;
+      line-height: 1.9;
+    }
+
+    .branch {
+      position: relative;
+      z-index: 1;
+      margin-top: 20px;
+      padding: 8px 16px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      font-size: 13px;
+    }
+
+    /* نموذج الدخول */
+    .form-panel {
+      padding: 42px 46px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .form-header {
+      margin-bottom: 28px;
+    }
+
+    .form-header h2 {
+      margin: 0 0 8px;
+      font-size: 27px;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .form-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .notice {
+      display: none;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .notice.show {
+      display: block;
+    }
+
+    .notice.error {
+      background: #fef3f2;
+      color: var(--danger);
+      border: 1px solid #fecdca;
+    }
+
+    .notice.success {
+      background: #ecfdf3;
+      color: var(--success);
+      border: 1px solid #abefc6;
+    }
+
+    .notice.info {
+      background: #eff8ff;
+      color: #175cd3;
+      border: 1px solid #b2ddff;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #374151;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      color: #7b8794;
+      pointer-events: none;
+    }
+
+    .input {
+      width: 100%;
+      height: 50px;
+      padding: 0 46px 0 46px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      outline: none;
+      background: #fff;
+      color: var(--text);
+      transition: .2s ease;
+    }
+
+    .input::placeholder {
+      color: #a0a8b2;
+    }
+
+    .input:hover {
+      border-color: #b7c3cd;
+    }
+
+    .input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(15,118,110,.10);
+    }
+
+    .password-toggle {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #6b7280;
+      padding: 0;
+    }
+
+    .password-toggle:hover {
+      background: #f3f4f6;
+      color: var(--primary);
+    }
+
+    .password-toggle svg {
+      width: 19px;
+      height: 19px;
+    }
+
+    .options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 2px 0 20px;
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #4b5563;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .remember input {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .link-btn {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .link-btn:hover {
+      color: var(--primary-dark);
+      text-decoration: underline;
+    }
+
+    .primary-btn {
+      width: 100%;
+      height: 52px;
+      border: 0;
+      border-radius: 13px;
+      background: linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+      );
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      box-shadow: 0 8px 18px rgba(15,118,110,.20);
+      transition: .2s ease;
+    }
+
+    .primary-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 11px 23px rgba(15,118,110,.25);
+    }
+
+    .primary-btn:disabled {
+      opacity: .65;
+      cursor: not-allowed;
+    }
+
+    .loading {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .loading.show {
+      display: flex;
+    }
+
+    .spinner {
+      width: 17px;
+      height: 17px;
+      border: 2px solid rgba(255,255,255,.35);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .setup-link {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .setup-link button {
+      border: 0;
+      background: none;
+      color: var(--primary);
+      font-weight: 800;
+      padding: 0 3px;
+    }
+
+    .footer {
+      margin-top: 25px;
+      padding-top: 17px;
+      border-top: 1px solid #edf0f2;
+      text-align: center;
+      color: #8a949e;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    /* الصفحات الثانوية */
+    .secondary {
+      display: none;
+    }
+
+    .secondary.show {
+      display: block;
+    }
+
+    .login-view.hidden {
+      display: none;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 0;
+      background: transparent;
+      color: var(--primary);
+      padding: 0;
+      margin-bottom: 22px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .back-btn:hover {
+      color: var(--primary-dark);
+    }
+
+    .back-btn svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .password-strength {
+      display: none;
+      margin-top: 8px;
+    }
+
+    .password-strength.show {
+      display: block;
+    }
+
+    .strength-bars {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      margin-bottom: 5px;
+    }
+
+    .strength-bar {
+      height: 4px;
+      border-radius: 5px;
+      background: #e5e7eb;
+    }
+
+    .strength-text {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .recovery-note {
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border-radius: 11px;
+      background: #fffbeb;
+      border: 1px solid #fedf89;
+      color: #854d0e;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 760px) {
+      .login-shell {
+        grid-template-columns: 1fr;
+        max-width: 520px;
+      }
+
+      .brand-panel {
+        padding: 30px 22px;
+      }
+
+      .emblem {
+        width: 78px;
+        height: 78px;
+        margin-bottom: 10px;
+      }
+
+      .brand-seal {
+        width: 57px;
+        height: 57px;
+        margin-bottom: 10px;
+      }
+
+      .brand-panel h1 {
+        font-size: 22px;
+      }
+
+      .brand-panel .subtitle {
+        font-size: 13px;
+      }
+
+      .form-panel {
+        padding: 32px 24px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .page {
+        padding: 12px;
+      }
+
+      .login-shell {
+        border-radius: 17px;
+      }
+
+      .brand-panel {
+        padding: 25px 18px;
+      }
+
+      .form-panel {
+        padding: 27px 18px;
+      }
+
+      .options {
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<header class="hero hero--auth">
-  <div class="hero-row">
-    <span class="pill pill-gold">NIAS · 2026</span>
-    <img class="emblem" src="img/emblem.png" alt="شعار الجمهورية اليمنية" width="200" height="123">
-    <span class="pill pill-green">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>
-      بيانات محلية <i class="dot"></i>
-    </span>
-  </div>
-  <p class="republic">الجمهورية اليمنية</p>
-  <div class="goldline"></div>
-  <div class="seal"><img src="img/seal.png" alt="شعار المعهد الوطني للعلوم الإدارية" width="198" height="198"></div>
-  <h1 class="inst">المعهد الوطني للعلوم الإدارية</h1>
-  <p class="branch">فرع إب — مركز التخطيط والتطوير وضمان الجودة</p>
-</header>
+  <main class="page">
+    <section class="login-shell">
 
-<main class="auth-wrap">
-  <section class="auth-card" aria-labelledby="authTitle">
-    <div class="auth-head">
-      <h2 id="authTitle">تسجيل الدخول إلى سجل الخريجين</h2>
-      <p>Graduates Registry — Secure Access</p>
-    </div>
+      <!-- الجانب التعريفي -->
+      <aside class="brand-panel">
+        <img
+          class="emblem"
+          src="img/emblem.png"
+          alt="شعار الجمهورية"
+          onerror="this.style.display='none'"
+        >
 
-    <p id="authErr" class="auth-err" role="alert"></p>
-    <p id="authOk" class="auth-ok"></p>
+        <img
+          class="brand-seal"
+          src="img/seal.png"
+          alt="شعار المعهد"
+          onerror="this.style.display='none'"
+        >
 
-    <form id="authForm" class="auth-body" novalidate>
-      <label>اسم المستخدم
-        <input name="user" id="authUser" autocomplete="username" inputmode="text" required>
-      </label>
-      <label>كلمة المرور
-        <span class="pass-wrap">
-          <input name="pass" id="authPass" type="password" autocomplete="current-password" required>
-          <button type="button" class="pass-eye" id="btnEye" aria-label="إظهار كلمة المرور">
-            <svg viewBox="0 0 24 24" id="eyeOpen"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
-            <svg viewBox="0 0 24 24" id="eyeClosed" hidden><path d="M17.9 17.9A10.4 10.4 0 0 1 12 19c-6.5 0-10-7-10-7a17.6 17.6 0 0 1 4.1-4.9M9.9 4.9A9.5 9.5 0 0 1 12 4.5c6.5 0 10 7 10 7a17.7 17.7 0 0 1-2.2 3.2"/><path d="M3 3l18 18"/></svg>
+        <h1>سجل الخريجين</h1>
+
+        <p class="subtitle">
+          نظام إدارة بيانات خريجي<br>
+          المعهد الوطني للعلوم الإدارية
+        </p>
+
+        <div class="branch">
+          فرع إب
+        </div>
+      </aside>
+
+      <!-- الجانب الوظيفي -->
+      <section class="form-panel">
+
+        <!-- تسجيل الدخول -->
+        <div id="loginView" class="login-view">
+
+          <div class="form-header">
+            <h2>مرحباً بك</h2>
+            <p>
+              سجّل الدخول للوصول إلى نظام سجل الخريجين.
+            </p>
+          </div>
+
+          <div id="loginNotice" class="notice" role="alert"></div>
+
+          <form id="loginForm" autocomplete="on">
+
+            <div class="field">
+              <label class="field-label" for="username">
+                اسم المستخدم
+              </label>
+
+              <div class="input-wrap">
+
+                <svg class="input-icon" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor"
+                     stroke-width="1.8">
+                  <path d="M20 21a8 8 0 0 0-16 0"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+
+                <input
+                  id="username"
+                  class="input"
+                  type="text"
+                  name="username"
+                  placeholder="أدخل اسم المستخدم"
+                  autocomplete="username"
+                  maxlength="40"
+                  required
+                  autofocus
+                >
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="password">
+                كلمة المرور
+              </label>
+
+              <div class="input-wrap">
+
+                <svg class="input-icon" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor"
+                     stroke-width="1.8">
+                  <rect x="4" y="10" width="16" height="10" rx="2"/>
+                  <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+                  <path d="M12 14v3"/>
+                </svg>
+
+                <input
+                  id="password"
+                  class="input"
+                  type="password"
+                  name="password"
+                  placeholder="أدخل كلمة المرور"
+                  autocomplete="current-password"
+                  required
+                >
+
+                <button
+                  id="togglePassword"
+                  class="password-toggle"
+                  type="button"
+                  aria-label="إظهار كلمة المرور"
+                  title="إظهار كلمة المرور"
+                >
+                  <svg id="eyeIcon" viewBox="0 0 24 24"
+                       fill="none" stroke="currentColor"
+                       stroke-width="1.8">
+                    <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
+                    <circle cx="12" cy="12" r="2.5"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="options">
+
+              <label class="remember">
+                <input
+                  id="remember"
+                  type="checkbox"
+                  name="remember"
+                >
+                <span>تذكرني لمدة 7 أيام</span>
+              </label>
+
+              <button
+                id="forgotBtn"
+                class="link-btn"
+                type="button"
+              >
+                نسيت كلمة المرور؟
+              </button>
+
+            </div>
+
+            <button
+              id="loginBtn"
+              class="primary-btn"
+              type="submit"
+            >
+              <span id="loginText">تسجيل الدخول</span>
+
+              <span id="loginLoading" class="loading">
+                <span class="spinner"></span>
+                جارٍ التحقق...
+              </span>
+            </button>
+
+          </form>
+
+          <div id="setupLink" class="setup-link" hidden>
+            لا يوجد مدير للنظام بعد؟
+            <button id="setupBtn" type="button">
+              إعداد النظام لأول مرة
+            </button>
+          </div>
+
+          <div class="footer">
+            نظام محلي لإدارة سجل الخريجين<br>
+            المعهد الوطني للعلوم الإدارية – فرع إب
+          </div>
+        </div>
+
+        <!-- إعداد النظام لأول مرة -->
+        <div id="setupView" class="secondary">
+
+          <button id="backFromSetup" class="back-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+            العودة لتسجيل الدخول
           </button>
-        </span>
-      </label>
-      <label class="check"><input type="checkbox" id="authRemember" checked> تذكرني على هذا الجهاز</label>
-    </form>
 
-    <div class="auth-foot">
-      <button form="authForm" id="btnLogin" class="primary" type="submit">دخول</button>
-      <p class="auth-meta" id="authMeta">البيانات محفوظة على هذا الجهاز ولا تُرسل إلى أي خادم.</p>
-    </div>
-  </section>
-</main>
+          <div class="form-header">
+            <h2>إعداد النظام</h2>
+            <p>
+              أنشئ حساب مدير النظام الأول لبدء استخدام التطبيق.
+            </p>
+          </div>
 
-<footer class="foot">
-  <p class="foot-a"><b>سجل الخريجين</b> — المعهد الوطني للعلوم الإدارية · فرع إب</p>
-  <p class="foot-b">البيانات محفوظة محلياً عبر IndexedDB · تعمل دون اتصال</p>
-  <div class="sign">
-    <span class="sign-l1">هندسة وتطوير</span>
-    <span class="sign-name" dir="ltr">Dr.Salah Al-Ahdal</span>
-    <span class="sign-l2" dir="ltr">Design &amp; Development</span>
-    <i class="goldline"></i>
-  </div>
-</footer>
+          <div id="setupNotice" class="notice" role="alert"></div>
 
-<div id="toast" role="status" aria-live="polite"></div>
+          <form id="setupForm" autocomplete="off">
 
-<>
-'use strict';
-(() => {
-  const $ = s => document.querySelector(s);
+            <div class="field">
+              <label class="field-label" for="setupName">
+                الاسم الكامل
+              </label>
 
-  /* المظهر: نفس تفضيل index.html */
-  const store = {
-    get: k => { try { return localStorage.getItem(k); } catch { return null; } },
-    set: (k, v) => { try { localStorage.setItem(k, v); } catch {} }
-  };
-  document.documentElement.dataset.theme = store.get('theme') || 'dark';
+              <div class="input-wrap">
+                <svg class="input-icon" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor"
+                     stroke-width="1.8">
+                  <path d="M20 21a8 8 0 0 0-16 0"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
 
-  /* تنبيه */
-  let toastT;
-  function toast(msg) {
-    const t = $('#toast');
-    t.innerHTML = '';
-    const s = document.createElement('span'); s.textContent = msg; t.append(s);
-    t.classList.add('show');
-    clearTimeout(toastT);
-    toastT = setTimeout(() => t.classList.remove('show'), 4000);
-  }
+                <input
+                  id="setupName"
+                  class="input"
+                  type="text"
+                  autocomplete="name"
+                  placeholder="أدخل الاسم الكامل"
+                  minlength="3"
+                  required
+                >
+              </div>
+            </div>
 
-  function err(msg) {
-    const e = $('#authErr');
-    e.textContent = msg;
-    e.classList.add('show');
-    const card = $('.auth-card');
-    card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
-  }
-  function ok(msg) {
-    const o = $('#authOk');
-    o.textContent = msg;
-    o.classList.add('show');
-  }
+            <div class="field">
+              <label class="field-label" for="setupUsername">
+                اسم المستخدم
+              </label>
 
-  /* إن كان هناك جلسة قائمة فانتقل مباشرة إلى السجل */
-  (async () => {
-    try {
-      if (window.NIASAuth && NIASAuth.hasSession && await NIASAuth.hasSession()) {
-        location.replace('index.html');
+              <div class="input-wrap">
+                <svg class="input-icon" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor"
+                     stroke-width="1.8">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M4 21a8 8 0 0 1 16 0"/>
+                </svg>
+
+                <input
+                  id="setupUsername"
+                  class="input"
+                  type="text"
+                  autocomplete="username"
+                  placeholder="مثال: admin"
+                  maxlength="40"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="setupPassword">
+                كلمة المرور
+              </label>
+
+              <div class="input-wrap">
+                <svg class="input-icon" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor"
+                     stroke-width="1.8">
+                  <rect x="4" y="10" width="16" height="10" rx="2"/>
+                  <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+                </svg>
+
+                <input
+                  id="setupPassword"
+                  class="input"
+                  type="password"
+                  autocomplete="new-password"
+                  placeholder="8 أحرف على الأقل مع أرقام"
+                  required
+                >
+
+                <button
+                  class="password-toggle"
+                  type="button"
+                  data-password-toggle="setupPassword"
+                  aria-label="إظهار كلمة المرور"
+                  title="إظهار كلمة المرور"
+                >
+                  <svg viewBox="0 0 24 24"
+                       fill="none" stroke="currentColor"
+                       stroke-width="1.8">
+                    <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
+                    <circle cx="12" cy="12" r="2.5"/>
+                  </svg>
+                </button>
+              </div>
+
+              <div id="strengthBox" class="password-strength">
+                <div class="strength-bars">
+                  <span class="strength-bar"></span>
+                  <span class="strength-bar"></span>
+                  <span class="strength-bar"></span>
+                  <span class="strength-bar"></span>
+                </div>
+                <div id="strengthText" class="strength-text"></div>
+              </div>
+            </div>
+
+            <button
+              id="setupSubmit"
+              class="primary-btn"
+              type="submit"
+            >
+              <span id="setupText">إنشاء حساب المدير</span>
+
+              <span id="setupLoading" class="loading">
+                <span class="spinner"></span>
+                جارٍ إنشاء الحساب...
+              </span>
+            </button>
+
+          </form>
+        </div>
+
+        <!-- استرداد كلمة المرور -->
+        <div id="recoverView" class="secondary">
+
+          <button id="backFromRecover" class="back-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+            العودة لتسجيل الدخول
+          </button>
+
+          <div class="form-header">
+            <h2>استرداد كلمة المرور</h2>
+            <p>
+              استخدم رمز الاسترداد الذي حصلت عليه عند إعداد الحساب.
+            </p>
+          </div>
+
+          <div class="recovery-note">
+            رمز الاسترداد حساس. احتفظ به في مكان آمن ولا تشاركه مع الآخرين.
+            بعد تغيير كلمة المرور سيتم إنشاء رمز استرداد جديد.
+          </div>
+
+          <div id="recoverNotice" class="notice" role="alert"></div>
+
+          <form id="recoverForm" autocomplete="off">
+
+            <div class="field">
+              <label class="field-label" for="recoverUsername">
+                اسم المستخدم
+              </label>
+
+              <input
+                id="recoverUsername"
+                class="input"
+                type="text"
+                autocomplete="username"
+                placeholder="اسم المستخدم"
+                maxlength="40"
+                required
+              >
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="recoveryCode">
+                رمز الاسترداد
+              </label>
+
+              <input
+                id="recoveryCode"
+                class="input"
+                type="text"
+                inputmode="text"
+                autocomplete="off"
+                placeholder="XXXX-XXXX-XXXX-XXXX"
+                maxlength="19"
+                required
+                style="padding-left:14px"
+              >
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="newPassword">
+                كلمة المرور الجديدة
+              </label>
+
+              <div class="input-wrap">
+                <input
+                  id="newPassword"
+                  class="input"
+                  type="password"
+                  autocomplete="new-password"
+                  placeholder="أدخل كلمة المرور الجديدة"
+                  required
+                >
+
+                <button
+                  class="password-toggle"
+                  type="button"
+                  data-password-toggle="newPassword"
+                  aria-label="إظهار كلمة المرور"
+                  title="إظهار كلمة المرور"
+                >
+                  <svg viewBox="0 0 24 24"
+                       fill="none" stroke="currentColor"
+                       stroke-width="1.8">
+                    <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
+                    <circle cx="12" cy="12" r="2.5"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <button
+              id="recoverSubmit"
+              class="primary-btn"
+              type="submit"
+            >
+              <span id="recoverText">تغيير كلمة المرور</span>
+
+              <span id="recoverLoading" class="loading">
+                <span class="spinner"></span>
+                جارٍ التحقق...
+              </span>
+            </button>
+
+          </form>
+        </div>
+
+      </section>
+    </section>
+  </main>
+
+  <script src="auth.js"></script>
+
+  <script>
+    'use strict';
+
+    (() => {
+
+      const $ = id => document.getElementById(id);
+
+      const loginView = $('loginView');
+      const setupView = $('setupView');
+      const recoverView = $('recoverView');
+
+      const loginNotice = $('loginNotice');
+      const setupNotice = $('setupNotice');
+      const recoverNotice = $('recoverNotice');
+
+      function showNotice(el, message, type = 'error') {
+        el.textContent = message || '';
+        el.className = 'notice show ' + type;
       }
-    } catch { /* نكمل لصفحة الدخول */ }
-  })();
 
-  /* عرض/إخفاء كلمة المرور */
-  $('#btnEye').addEventListener('click', () => {
-    const p = $('#authPass');
-    const show = p.type === 'password';
-    p.type = show ? 'text' : 'password';
-    $('#eyeOpen').hidden = show;
-    $('#eyeClosed').hidden = !show;
-    $('#btnEye').setAttribute('aria-label', show ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور');
-  });
+      function clearNotice(el) {
+        el.textContent = '';
+        el.className = 'notice';
+      }
 
-  /* الدخول: يستخدم NIASAuth.login إن وُجد، وإلا يعمل بدخول تجريبي محلي */
-  const DEMO = { user: 'admin', pass: 'nias2026', role: 'admin' };
+      function showView(view) {
+        loginView.classList.add('hidden');
+        setupView.classList.remove('show');
+        recoverView.classList.remove('show');
 
-  $('#authForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    $('#authErr').classList.remove('show');
-    $('#authOk').classList.remove('show');
+        if (view === 'login') {
+          loginView.classList.remove('hidden');
+        }
 
-    const u = $('#authUser').value.trim();
-    const p = $('#authPass').value;
-    if (!u) { err('أدخل اسم المستخدم.'); $('#authUser').focus(); return; }
-    if (!p) { err('أدخل كلمة المرور.'); $('#authPass').focus(); return; }
+        if (view === 'setup') {
+          setupView.classList.add('show');
+        }
 
-    const btn = $('#btnLogin');
-    btn.disabled = true; btn.textContent = 'جارٍ التحقق…';
-<script>
-'use strict';
-(() => {
-  const $ = s => document.querySelector(s);
+        if (view === 'recover') {
+          recoverView.classList.add('show');
+        }
 
-  /* المظهر: نفس تفضيل index.html */
-  const store = {
-    get: k => { try { return localStorage.getItem(k); } catch { return null; } },
-    set: (k, v) => { try { localStorage.setItem(k, v); } catch {} }
-  };
-  document.documentElement.dataset.theme = store.get('theme') || 'dark';
+        clearNotice(loginNotice);
+        clearNotice(setupNotice);
+        clearNotice(recoverNotice);
+      }
 
-  /* تنبيه */
-  let toastT;
-  function toast(msg) {
-    const t = $('#toast');
-    t.innerHTML = '';
-    const s = document.createElement('span'); s.textContent = msg; t.append(s);
-    t.classList.add('show');
-    clearTimeout(toastT);
-    toastT = setTimeout(() => t.classList.remove('show'), 4000);
-  }
+      function setLoading(button, textEl, loadingEl, loading) {
+        button.disabled = loading;
 
-  function err(msg) {
-    const e = $('#authErr');
-    e.textContent = msg;
-    e.classList.add('show');
-    const card = $('.auth-card');
-    card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
-  }
-  function ok(msg) {
-    const o = $('#authOk');
-    o.textContent = msg;
-    o.classList.add('show');
-  }
+        if (loading) {
+          textEl.style.display = 'none';
+          loadingEl.classList.add('show');
+        } else {
+          textEl.style.display = '';
+          loadingEl.classList.remove('show');
+        }
+      }
 
-  /* ───────── عرض/إخفاء كلمة المرور ───────── */
-  $('#btnEye').addEventListener('click', () => {
-    const p = $('#authPass');
-    const show = p.type === 'password';
-    p.type = show ? 'text' : 'password';
-    $('#eyeOpen').hidden = show;
-    $('#eyeClosed').hidden = !show;
-    $('#btnEye').setAttribute('aria-label', show ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور');
-  });
+      function togglePassword(inputId, button) {
+        const input = $(inputId);
+        if (!input) return;
 
-  /* ───────── التحقق من الدعم والجلسة والإعداد الأول ───────── */
-  (async () => {
-    if (!window.NIASAuth || !NIASAuth.supported()) {
-      err('هذا المتصفح لا يدعم التشفير المطلوب. افتح التطبيق عبر HTTPS أو localhost.');
-      $('#btnLogin').disabled = true;
-      return;
-    }
-    // جلسة قائمة؟ → انتقل مباشرة
-    try {
-      const s = await NIASAuth.requireSession({ redirect: false });
-      if (s) { location.replace('index.html'); return; }
-    } catch { /* تجاهل */ }
+        const visible = input.type === 'text';
+        input.type = visible ? 'password' : 'text';
 
-    // لا يوجد أي حساب؟ → اعرض إعداد أول مدير
-    if (!(await NIASAuth.hasUsers())) {
-      showSetupDialog();
-    }
-  })();
-
-  /* ───────── إعداد أول مدير ───────── */
-  function showSetupDialog() {
-    const name = prompt('إعداد النظام لأول مرة\n\nالاسم الكامل لمدير النظام:');
-    if (!name || name.trim().length < 3) { err('أُلغي الإعداد أو الاسم قصير.'); return; }
-    const username = prompt('اسم المستخدم (3–40 حرفاً بالإنجليزية، مثال: admin):');
-    if (!username) { err('أُلغي الإعداد.'); return; }
-    const password = prompt('كلمة المرور (8 أحرف على الأقل، حروف وأرقام):');
-    if (!password) { err('أُلغي الإعداد.'); return; }
-    const password2 = prompt('تأكيد كلمة المرور:');
-    if (password !== password2) { err('كلمتا المرور غير متطابقتين.'); return; }
-
-    NIASAuth.setupAdmin({ name, username, password })
-      .then(({ code }) => {
-        ok('تم إنشاء حساب المدير بنجاح.');
-        alert(
-          '✅ تم إعداد النظام.\n\n' +
-          'اسم المستخدم: ' + username + '\n\n' +
-          '🔑 رمز الاسترداد (احفظه في مكان آمن، لن يظهر مجدداً):\n\n' + code
+        button.setAttribute(
+          'aria-label',
+          visible ? 'إظهار كلمة المرور' : 'إخفاء كلمة المرور'
         );
-        $('#authUser').value = username;
-        $('#authPass').focus();
-      })
-      .catch(ex => {
-        err('تعذر الإعداد: ' + (NIASAuth.errorText ? NIASAuth.errorText(ex) : ex.message));
-      });
-  }
 
-  /* ───────── تسجيل الدخول ───────── */
-  $('#authForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    $('#authErr').classList.remove('show');
-    $('#authOk').classList.remove('show');
-
-    const u = $('#authUser').value.trim();
-    const p = $('#authPass').value;
-    if (!u) { err('أدخل اسم المستخدم.'); $('#authUser').focus(); return; }
-    if (!p) { err('أدخل كلمة المرور.'); $('#authPass').focus(); return; }
-
-    const btn = $('#btnLogin');
-    btn.disabled = true; btn.textContent = 'جارٍ التحقق…';
-
-    try {
-      // الدالة الصحيحة: verify (تُنشئ الجلسة بنفسها وتحفظها)
-      await NIASAuth.verify(u, p, $('#authRemember').checked);
-      ok('تم تسجيل الدخول بنجاح، جارٍ التحويل…');
-      const back = new URLSearchParams(location.search).get('back');
-      setTimeout(() => location.replace(
-        back && !back.includes('://') ? back : 'index.html'
-      ), 400);
-    } catch (ex) {
-      const code = ex && ex.code;
-      let msg = NIASAuth.errorText ? NIASAuth.errorText(ex) : 'تعذر الدخول.';
-      if (code === 'bad' && ex.left) msg += ` (محاولات متبقية: ${ex.left})`;
-      if (code === 'locked' && ex.until) {
-        const mins = Math.max(1, Math.round((ex.until - Date.now()) / 60000));
-        msg = `الحساب مقفل مؤقتاً. حاول بعد ${mins} دقيقة.`;
+        button.setAttribute(
+          'title',
+          visible ? 'إظهار كلمة المرور' : 'إخفاء كلمة المرور'
+        );
       }
-      err(msg);
-      $('#authPass').value = '';
-      $('#authPass').focus();
-      btn.disabled = false; btn.textContent = 'دخول';
-    }
-  });
-})();
-</script>
+
+      // إظهار / إخفاء كلمات المرور
+      $('togglePassword').addEventListener('click', function () {
+        togglePassword('password', this);
+      });
+
+      document.querySelectorAll('[data-password-toggle]')
+        .forEach(button => {
+          button.addEventListener('click', function () {
+            togglePassword(
+              this.dataset.passwordToggle,
+              this
+            );
+          });
+        });
+
+      // التحقق من دعم المتصفح
+      if (!NIASAuth.supported()) {
+        showNotice(
+          loginNotice,
+          NIASAuth.errorText({ code: 'nosupport' }),
+          'error'
+        );
+      }
+
+      // إذا كانت هناك جلسة صالحة، العودة للتطبيق
+      (async () => {
+        try {
+          const session = await NIASAuth.requireSession({
+            redirect: false
+          });
+
+          if (session) {
+            const params = new URLSearchParams(location.search);
+            const back = params.get('back');
+
+            // لا نسمح بتحويل المستخدم إلى رابط خارجي
+            if (
+              back &&
+              /^[a-zA-Z0-9_./-]+\.html(?:\?.*)?$/.test(back)
+            ) {
+              location.replace(back);
+            } else {
+              location.replace('index.html');
+            }
+
+            return;
+          }
+
+          const hasUsers = await NIASAuth.hasUsers();
+
+          if (!hasUsers) {
+            $('setupLink').hidden = false;
+          }
+
+        } catch (err) {
+          console.error(err);
+        }
+      })();
+
+      // تسجيل الدخول
+      $('loginForm').addEventListener('submit', async event => {
+        event.preventDefault();
+
+        clearNotice(loginNotice);
+
+        const username = $('username').value.trim();
+        const password = $('password').value;
+        const remember = $('remember').checked;
+
+        if (!username || !password) {
+          showNotice(
+            loginNotice,
+            'يرجى إدخال اسم المستخدم وكلمة المرور.'
+          );
+          return;
+        }
+
+        setLoading(
+          $('loginBtn'),
+          $('loginText'),
+          $('loginLoading'),
+          true
+        );
+
+        try {
+          await NIASAuth.verify(
+            username,
+            password,
+            remember
+          );
+
+          showNotice(
+            loginNotice,
+            'تم تسجيل الدخول بنجاح. جارٍ فتح النظام...',
+            'success'
+          );
+
+          // بدء مراقبة الخمول للجلسة غير الدائمة
+          NIASAuth.watchIdle(30);
+
+          setTimeout(() => {
+            const params = new URLSearchParams(location.search);
+            const back = params.get('back');
+
+            if (
+              back &&
+              /^[a-zA-Z0-9_./-]+\.html(?:\?.*)?$/.test(back)
+            ) {
+              location.replace(back);
+            } else {
+              location.replace('index.html');
+            }
+          }, 350);
+
+        } catch (err) {
+          console.error(err);
+
+          if (err && err.code === 'locked') {
+            const until = Number(err.until || 0);
+            const remaining = Math.max(
+              1,
+              Math.ceil((until - Date.now()) / 60000)
+            );
+
+            showNotice(
+              loginNotice,
+              `تم قفل الحساب مؤقتاً بسبب كثرة المحاولات الفاشلة. حاول بعد ${remaining} دقيقة.`
+            );
+
+          } else if (err && err.code === 'bad' && err.left != null) {
+
+            showNotice(
+              loginNotice,
+              `اسم المستخدم أو كلمة المرور غير صحيحة. المحاولات المتبقية: ${err.left}.`
+            );
+
+          } else {
+            showNotice(
+              loginNotice,
+              NIASAuth.errorText(err)
+            );
+          }
+
+        } finally {
+          setLoading(
+            $('loginBtn'),
+            $('loginText'),
+            $('loginLoading'),
+            false
+          );
+        }
+      });
+
+      // فتح إعداد النظام
+      $('setupBtn').addEventListener('click', () => {
+        showView('setup');
+        $('setupName').focus();
+      });
+
+      // العودة من الإعداد
+      $('backFromSetup').addEventListener('click', () => {
+        showView('login');
+        $('username').focus();
+      });
+
+      // مؤشر قوة كلمة المرور
+      $('setupPassword').addEventListener('input', () => {
+        const password = $('setupPassword').value;
+        const box = $('strengthBox');
+        const text = $('strengthText');
+        const bars = box.querySelectorAll('.strength-bar');
+
+        if (!password) {
+          box.classList.remove('show');
+          return;
+        }
+
+        box.classList.add('show');
+
+        const score = NIASAuth.strength(password);
+
+        const labels = [
+          'ضعيفة جداً',
+          'ضعيفة',
+          'متوسطة',
+          'جيدة',
+          'قوية'
+        ];
+
+        text.textContent = 'قوة كلمة المرور: ' + labels[score];
+
+        bars.forEach((bar, index) => {
+          bar.style.background =
+            index < score
+              ? 'var(--primary)'
+              : '#e5e7eb';
+        });
+      });
+
+      // إعداد المدير الأول
+      $('setupForm').addEventListener('submit', async event => {
+        event.preventDefault();
+
+        clearNotice(setupNotice);
+
+        const name = $('setupName').value.trim();
+        const username = $('setupUsername').value.trim();
+        const password = $('setupPassword').value;
+
+        setLoading(
+          $('setupSubmit'),
+          $('setupText'),
+          $('setupLoading'),
+          true
+        );
+
+        try {
+          const result = await NIASAuth.setupAdmin({
+            name,
+            username,
+            password
+          });
+
+          /*
+           * مهم:
+           * رمز الاسترداد يظهر مرة واحدة فقط بعد إنشاء المدير.
+           */
+          showNotice(
+            setupNotice,
+            `تم إنشاء حساب مدير النظام بنجاح.\n\nرمز الاسترداد:\n${result.code}\n\nاحفظ هذا الرمز في مكان آمن، ثم يمكنك تسجيل الدخول.`,
+            'success'
+          );
+
+          $('setupForm').reset();
+          $('strengthBox').classList.remove('show');
+
+          // تعبئة اسم المستخدم للصفحة الرئيسية
+          $('username').value = result.user.username;
+
+          setTimeout(() => {
+            showView('login');
+            $('password').focus();
+            showNotice(
+              loginNotice,
+              'تم إنشاء حساب المدير. أدخل كلمة المرور لتسجيل الدخول.',
+              'success'
+            );
+          }, 5000);
+
+        } catch (err) {
+          showNotice(
+            setupNotice,
+            NIASAuth.errorText(err)
+          );
+
+        } finally {
+          setLoading(
+            $('setupSubmit'),
+            $('setupText'),
+            $('setupLoading'),
+            false
+          );
+        }
+      });
+
+      // فتح استرداد كلمة المرور
+      $('forgotBtn').addEventListener('click', () => {
+        $('recoverUsername').value =
+          $('username').value.trim();
+
+        showView('recover');
+        $('recoverUsername').focus();
+      });
+
+      // العودة من الاسترداد
+      $('backFromRecover').addEventListener('click', () => {
+        showView('login');
+        $('username').focus();
+      });
+
+      // تنسيق رمز الاسترداد
+      $('recoveryCode').addEventListener('input', event => {
+        let value = event.target.value
+          .toUpperCase()
+          .replace(/[^A-Z0-9]/g, '')
+          .slice(0, 16);
+
+        const groups = value.match(/.{1,4}/g);
+        event.target.value = groups
+          ? groups.join('-')
+          : '';
+      });
+
+      // استرداد كلمة المرور
+      $('recoverForm').addEventListener('submit', async event => {
+        event.preventDefault();
+
+        clearNotice(recoverNotice);
+
+        const username =
+          $('recoverUsername').value.trim();
+
+        const code =
+          $('recoveryCode').value.trim();
+
+        const newPassword =
+          $('newPassword').value;
+
+        setLoading(
+          $('recoverSubmit'),
+          $('recoverText'),
+          $('recoverLoading'),
+          true
+        );
+
+        try {
+          const newCode = await NIASAuth.recover(
+            username,
+            code,
+            newPassword
+          );
+
+          showNotice(
+            recoverNotice,
+            `تم تغيير كلمة المرور بنجاح.\n\nرمز الاسترداد الجديد:\n${newCode}\n\nاحفظ الرمز الجديد في مكان آمن.`,
+            'success'
+          );
+
+          $('recoverForm').reset();
+
+          setTimeout(() => {
+            showView('login');
+            $('username').value = username;
+            $('password').focus();
+
+            showNotice(
+              loginNotice,
+              'تم تغيير كلمة المرور. يمكنك تسجيل الدخول الآن.',
+              'success'
+            );
+          }, 5000);
+
+        } catch (err) {
+          if (err && err.code === 'locked') {
+            showNotice(
+              recoverNotice,
+              'تم قفل الحساب مؤقتاً بسبب كثرة المحاولات الفاشلة.'
+            );
+          } else {
+            showNotice(
+              recoverNotice,
+              NIASAuth.errorText(err)
+            );
+          }
+
+        } finally {
+          setLoading(
+            $('recoverSubmit'),
+            $('recoverText'),
+            $('recoverLoading'),
+            false
+          );
+        }
+      });
+
+      // دعم زر Escape للعودة
+      document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+
+        if (setupView.classList.contains('show')) {
+          showView('login');
+        } else if (recoverView.classList.contains('show')) {
+          showView('login');
+        }
+      });
+
+    })();
+  </script>
+
 </body>
-</html>
+                </html>
