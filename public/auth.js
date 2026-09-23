@@ -1,14 +1,14 @@
 'use strict';
 /* وحدة الدخول والصلاحيات (RBAC) — محلية بالكامل على الجهاز
    - كلمات المرور: PBKDF2-SHA256 (150 ألف دورة) مع ملح عشوائي، ولا تُخزَّن نصاً.
-   - الجلسة: sessionStorage (8 ساعات) أو localStorage (7 أيام عند «تذكرني»).
+   - الجلسة: IndexedDB (نفس قاعدة البيانات) — تبقى بعد إغلاق التطبيق 7 أيام.
+   - حسابات افتراضية: admin / editor / viewer تُنشأ تلقائياً عند أول تشغيل.
    - قفل الحساب 5 دقائق بعد 5 محاولات فاشلة، وسجل تدقيق لآخر الأحداث.
    ملاحظة: هذه بوابة تطبيق محلية وليست بديلاً عن خادم؛ من يملك الجهاز والمتصفح يستطيع تجاوزها. */
 (function () {
   const DB_NAME = 'nias-auth';
-  const SESSION_KEY = 'nias_session';
   const MAX_FAILS = 5, LOCK_MS = 5 * 60 * 1000;
-  const SESSION_MS = 8 * 3600 * 1000, REMEMBER_MS = 7 * 86400 * 1000, ITER = 150000;
+  const REMEMBER_MS = 7 * 86400 * 1000, ITER = 150000;
 
   const ROLES = { admin: 'مدير النظام', editor: 'محرر', viewer: 'مطالع' };
   const PERMS = {
@@ -23,7 +23,8 @@
     setup: 'إعداد النظام', login: 'تسجيل دخول', login_fail: 'محاولة دخول فاشلة', logout: 'تسجيل خروج',
     user_add: 'إضافة مستخدم', user_update: 'تعديل مستخدم', user_delete: 'حذف مستخدم',
     pw_change: 'تغيير كلمة المرور', recover: 'استرداد كلمة المرور',
-    records_import: 'استيراد سجلات', records_export: 'تصدير سجلات', records_wipe: 'حذف سجلات'
+    records_import: 'استيراد سجلات', records_export: 'تصدير سجلات', records_wipe: 'حذف سجلات',
+    seed: 'تهيئة الحسابات الافتراضية'
   };
   const ERR = {
     nosupport: 'هذا المتصفح لا يدعم التشفير المطلوب. افتح التطبيق عبر HTTPS أو localhost.',
@@ -81,14 +82,22 @@
   }
   const normCode = c => String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 
-  /* ───────── قاعدة بيانات الحسابات ───────── */
+  /* ───────── قاعدة بيانات الحسابات (v2: مع جدول الجلسة) ───────── */
   let dbp;
   const open = () => dbp || (dbp = new Promise((res, rej) => {
-    const r = indexedDB.open(DB_NAME, 1);
+    const r = indexedDB.open(DB_NAME, 2);
     r.onupgradeneeded = () => {
       const db = r.result;
-      db.createObjectStore('users', { keyPath: 'id', autoIncrement: true }).createIndex('username', 'username', { unique: true });
-      db.createObjectStore('audit', { keyPath: 'id', autoIncrement: true });
+      if (!db.objectStoreNames.contains('users')) {
+        db.createObjectStore('users', { keyPath: 'id', autoIncrement: true })
+          .createIndex('username', 'username', { unique: true });
+      }
+      if (!db.objectStoreNames.contains('audit')) {
+        db.createObjectStore('audit', { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains('session')) {
+        db.createObjectStore('session', { keyPath: 'key' });
+      }
     };
     r.onsuccess = () => res(r.result);
     r.onerror = () => rej(r.error);
@@ -119,31 +128,69 @@
     return all.slice(-n).reverse();
   }
 
-  /* ───────── الجلسة ───────── */
-  function readSession() {
-    for (const st of [sessionStorage, localStorage]) {
-      try { const v = st.getItem(SESSION_KEY); if (v) return JSON.parse(v); } catch { /* تجاهل */ }
-    }
+  /* ───────── الجلسة (IndexedDB) ───────── */
+  async function readSession() {
+    // 1. جرّب localStorage أولًا (أسرع وأضمن)
+    try {
+      const raw = localStorage.getItem('nias_session');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.exp > Date.now()) {
+          console.log('🔍 readSession (localStorage):', parsed);
+          return parsed;
+        }
+      }
+    } catch (e) { console.warn('localStorage read error:', e); }
+    
+    // 2. جرّب IndexedDB
+    try {
+      const item = await req('session', 'readonly', store => store.get('current'));
+      if (item && item.data && item.data.exp > Date.now()) {
+        console.log('🔍 readSession (IndexedDB):', item.data);
+        // انسخه إلى localStorage
+        try { localStorage.setItem('nias_session', JSON.stringify(item.data)); } catch {}
+        return item.data;
+      }
+    } catch (e) { console.warn('IndexedDB read error:', e); }
+    
     return null;
   }
-  function clearSession() {
-    try { sessionStorage.removeItem(SESSION_KEY); } catch { /* */ }
-    try { localStorage.removeItem(SESSION_KEY); } catch { /* */ }
+  async function clearSession() {
+    try { localStorage.removeItem('nias_session'); } catch {}
+    try { await req('session', 'readwrite', store => store.delete('current')); } catch {}
   }
-  function startSession(u, remember) {
-    const s = { uid: u.id, username: u.username, name: u.name, role: u.role, remember: !!remember, exp: Date.now() + (remember ? REMEMBER_MS : SESSION_MS) };
-    clearSession();
-    try { (remember ? localStorage : sessionStorage).setItem(SESSION_KEY, JSON.stringify(s)); } catch { /* */ }
-    cur = s;
-    return s;
+  async function startSession(u, remember) {
+    const sessionData = {
+      uid: u.id,
+      username: u.username,
+      name: u.name,
+      role: u.role,
+      remember: true,
+      exp: Date.now() + REMEMBER_MS
+    };
+    
+    // 1. احفظ في localStorage
+    try {
+      localStorage.setItem('nias_session', JSON.stringify(sessionData));
+      console.log('✅ startSession (localStorage): saved', sessionData);
+    } catch (e) { console.error('localStorage save error:', e); }
+    
+    // 2. احفظ في IndexedDB
+    try {
+      await req('session', 'readwrite', store => store.put({ key: 'current', data: sessionData }));
+      console.log('✅ startSession (IndexedDB): saved', sessionData);
+    } catch (e) { console.error('IndexedDB save error:', e); }
+    
+    cur = sessionData;
+    return sessionData;
   }
   async function requireSession({ redirect = true } = {}) {
     const go = () => { if (redirect) location.replace('login.html'); return null; };
-    const s = readSession();
-    if (!s || s.exp < Date.now()) { clearSession(); return go(); }
+    const s = await readSession();
+    if (!s || s.exp < Date.now()) { await clearSession(); return go(); }
     try {
       const u = await getById(s.uid);
-      if (!u || u.status !== 'active') { clearSession(); return go(); }
+      if (!u || u.status !== 'active') { await clearSession(); return go(); }
       s.role = u.role; s.name = u.name;
       cur = s;
       return s;
@@ -151,7 +198,8 @@
   }
   async function logout() {
     await log('logout');
-    clearSession(); cur = null;
+    await clearSession();
+    cur = null;
     location.replace('login.html');
   }
   function watchIdle(minutes = 30) {
@@ -183,11 +231,12 @@
     }
     u.failed = 0; u.lockUntil = 0; u.lastLogin = Date.now();
     await saveUser(u);
-    const s = startSession(u, remember);
+    const s = await startSession(u, remember);
     await log('login', { user: u.username });
     return s;
   }
 
+  /* ───────── الإعداد الأولي للمدير (للاستخدام المتقدم فقط) ───────── */
   async function setupAdmin({ name, username, password }) {
     if (!supported()) throw fail('nosupport');
     if (await countUsers() > 0) throw fail('setupdone');
@@ -202,6 +251,39 @@
     u.id = await saveUser(u);
     await log('setup', { user: username });
     return { user: u, code };
+  }
+
+  /* ───────── بذور الحسابات الافتراضية ───────── */
+  async function seedDefaultUsers() {
+    if (await countUsers() > 0) return { created: 0, skipped: true };
+
+    const defaults = [
+      { username: 'admin',  name: 'مدير النظام', role: 'admin',  password: 'NIAS@2026' },
+      { username: 'editor', name: 'محرر',         role: 'editor', password: 'Nias@Edit26' },
+      { username: 'viewer', name: 'مطالع',        role: 'viewer', password: 'Nias@View26' },
+    ];
+
+    let created = 0;
+    for (const d of defaults) {
+      try {
+        if (await getByName(d.username)) continue;
+        const u = {
+          username: d.username,
+          name: d.name,
+          role: d.role,
+          status: 'active',
+          ...(await makeCred(d.password)),
+          created: Date.now(),
+          lastLogin: 0,
+          failed: 0,
+          lockUntil: 0,
+        };
+        u.id = await saveUser(u);
+        created++;
+      } catch (e) { /* تجاهل الأخطاء الفردية */ }
+    }
+    if (created > 0) await log('seed', { created });
+    return { created, skipped: false };
   }
 
   async function recover(username, code, newPassword) {
@@ -293,8 +375,9 @@
   window.NIASAuth = {
     ROLES, ACTIONS, supported, checkPassword, strength, errorText,
     hasUsers: async () => (await countUsers()) > 0,
-    setupAdmin, verify, recover, startSession, requireSession, logout, watchIdle,
-    session: () => cur || readSession(), can, log, recentAudit,
-    listUsers, addUser, updateUser, removeUser, changeOwnPassword
+    setupAdmin, seedDefaultUsers, verify, recover, startSession, requireSession, logout, watchIdle,
+    session: () => cur, can, log, recentAudit,
+    listUsers, addUser, updateUser, removeUser, changeOwnPassword,
+    seedDefaultUsers
   };
 })();

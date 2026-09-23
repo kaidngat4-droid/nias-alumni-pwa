@@ -4202,12 +4202,15 @@
     let session;
 
     try {
-      session =
-        await NIASAuth.requireSession();
+      session = await NIASAuth.requireSession({ redirect: false });
 
       if (!session) {
+        console.warn('⚠️  No session — redirecting to login');
+        location.replace('login.html');
         return;
       }
+
+      console.log('✅ Session loaded:', session);
 
       /*
         تشغيل مراقبة الخمول في الصفحة الرئيسية أيضاً.
