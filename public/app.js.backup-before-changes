@@ -199,32 +199,9 @@
      نموذج البيانات
      ═══════════════════════════════════════════════════════ */
 
-  /* ─────────────── القوائم المنسدلة ─────────────── */
-
-const BRANCHES = [
-  'إب', 'تعز', 'صنعاء', 'الحديدة', 'صعدة', 'عدن'
-];
-
-const PROGRAMS = [
-  'دبلوم', 'بكالوريوس', 'ماجستير'
-];
-
-const SPECIALIZATIONS = [
-  'محاسبة',
-  'إدارة أعمال',
-  'إدارة مكاتب',
-  'تسويق',
-  'حاسوب',
-  'إدارة موارد بشرية',
-  'إدارة مالية',
-  'إدارة مستشفيات',
-  'سكرتارية'
-];
-
   const FIELDS = [
     'serial',
     'name',
-    'branch',
     'program',
     'acadNo',
     'gender',
@@ -234,7 +211,6 @@ const SPECIALIZATIONS = [
     'grade',
     'year',
     'certNo',
-    'receiveDate',
     'workplace',
     'job',
     'phone',
@@ -245,8 +221,7 @@ const SPECIALIZATIONS = [
   const LABELS = {
     serial: 'م',
     name: 'الاسم',
-    branch: 'فرع المعهد',
-    program: 'البرنامج الأكاديمي',
+    program: 'البرنامج',
     acadNo: 'الرقم الأكاديمي',
     gender: 'الجنس',
     spec: 'التخصص',
@@ -255,7 +230,6 @@ const SPECIALIZATIONS = [
     grade: 'التقدير',
     year: 'عام التخرج',
     certNo: 'رقم الشهادة',
-    receiveDate: 'تاريخ الاستلام',
     workplace: 'جهة العمل',
     job: 'الوظيفة',
     phone: 'رقم الهاتف',
@@ -267,7 +241,6 @@ const SPECIALIZATIONS = [
   const ALIASES = {
     serial: ['م', '#', 'serial', 'تسلسل'],
     name: ['الاسم', 'الاسم الرباعي', 'الاسم الكامل', 'name', 'full name'],
-    branch: ['فرع المعهد', 'الفرع', 'فرع', 'branch'],
     program: ['البرنامج', 'program'],
     acadNo: [
       'الرقم الاكاديمي',
@@ -289,7 +262,6 @@ const SPECIALIZATIONS = [
       'graduation year'
     ],
     certNo: ['رقم الشهاده', 'certno', 'certificate'],
-    receiveDate: ['تاريخ الاستلام', 'تاريخ الإستلام', 'الاستلام', 'receiveDate', 'date'],
     workplace: [
       'جهه العمل',
       'مكان العمل',

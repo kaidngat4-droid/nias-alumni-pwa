@@ -358,7 +358,7 @@
 
 
   <p class="branch">
-    فرع إب — إدارة الشؤون  الأكاديمية -قسم شؤون الخريجين 
+    فرع إب — مركز التخطيط والتطوير وضمان الجودة
   </p>
 
 
@@ -1195,21 +1195,6 @@
           required
           autocomplete="off"
         >
-      </label>
-
-
-      <label>
-        فرع المعهد
-
-        <select name="branch">
-          <option value="">—</option>
-          <option value="إب">إب</option>
-          <option value="تعز">تعز</option>
-          <option value="صنعاء">صنعاء</option>
-          <option value="الحديدة">الحديدة</option>
-          <option value="صعدة">صعدة</option>
-          <option value="عدن">عدن</option>
-        </select>
       </label>
 
 

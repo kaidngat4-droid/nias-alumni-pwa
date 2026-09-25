@@ -358,7 +358,7 @@
 
 
   <p class="branch">
-    فرع إب — إدارة الشؤون  الأكاديمية -قسم شؤون الخريجين 
+    فرع إب — مركز التخطيط والتطوير وضمان الجودة
   </p>
 
 
@@ -731,21 +731,6 @@
 
         </select>
 
-      </label>
-
-
-      <label>
-        فرع المعهد
-
-        <select name="branch">
-          <option value="">—</option>
-          <option value="إب">إب</option>
-          <option value="تعز">تعز</option>
-          <option value="صنعاء">صنعاء</option>
-          <option value="الحديدة">الحديدة</option>
-          <option value="صعدة">صعدة</option>
-          <option value="عدن">عدن</option>
-        </select>
       </label>
 
 
@@ -1199,21 +1184,6 @@
 
 
       <label>
-        فرع المعهد
-
-        <select name="branch">
-          <option value="">—</option>
-          <option value="إب">إب</option>
-          <option value="تعز">تعز</option>
-          <option value="صنعاء">صنعاء</option>
-          <option value="الحديدة">الحديدة</option>
-          <option value="صعدة">صعدة</option>
-          <option value="عدن">عدن</option>
-        </select>
-      </label>
-
-
-      <label>
         الرقم الأكاديمي
 
         <input
@@ -1224,16 +1194,6 @@
         >
       </label>
 
-
-      <label>
-        تاريخ الاستلام
-
-        <input
-          name="receiveDate"
-          type="date"
-          autocomplete="off"
-        >
-      </label>
 
       <label>
         رقم الشهادة
@@ -1271,18 +1231,11 @@
       <label>
         التخصص
 
-        <select name="spec">
-          <option value="">—</option>
-          <option value="محاسبة">محاسبة</option>
-          <option value="إدارة أعمال">إدارة أعمال</option>
-          <option value="إدارة مكاتب">إدارة مكاتب</option>
-          <option value="تسويق">تسويق</option>
-          <option value="حاسوب">حاسوب</option>
-          <option value="إدارة موارد بشرية">إدارة موارد بشرية</option>
-          <option value="إدارة مالية">إدارة مالية</option>
-          <option value="إدارة مستشفيات">إدارة مستشفيات</option>
-          <option value="سكرتارية">سكرتارية</option>
-        </select>
+        <input
+          name="spec"
+          list="dlSpec"
+          autocomplete="off"
+        >
       </label>
 
 
@@ -1359,14 +1312,12 @@
 
 
       <label>
-        البرنامج الأكاديمي
+        البرنامج
 
-        <select name="program">
-          <option value="">—</option>
-          <option value="دبلوم">دبلوم</option>
-          <option value="بكالوريوس">بكالوريوس</option>
-          <option value="ماجستير">ماجستير</option>
-        </select>
+        <input
+          name="program"
+          autocomplete="off"
+        >
       </label>
 
 
